@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
 from modules.elm.models import LeaveType, LeaveBalance, LeaveApplication
+from modules.elm.services.leave import get_balance
 
 
 class LeaveTypeSerializer(ModelSerializer):
@@ -37,17 +38,3 @@ class ApplyInputSerializer(serializers.Serializer):
 class DecisionInputSerializer(serializers.Serializer):
     approve = serializers.BooleanField()
     remarks = serializers.CharField(required=False, allow_blank=True, max_length=2000)
-
-
-class LeaveTypeCreateInputSerializer(serializers.Serializer):
-    code = serializers.CharField(max_length=16)
-    name = serializers.CharField(max_length=128)
-    max_days_per_year = serializers.IntegerField(min_value=0)
-    requires_document = serializers.BooleanField(required=False, default=False)
-
-
-class AllotInputSerializer(serializers.Serializer):
-    employee_id = serializers.IntegerField()
-    leave_type_id = serializers.IntegerField()
-    year = serializers.IntegerField(min_value=2000)
-    allotted = serializers.IntegerField(min_value=0)

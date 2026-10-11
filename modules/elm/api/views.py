@@ -1,17 +1,17 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 from drf_spectacular.utils import extend_schema
 from fusion_auth.permissions import HasPermission
-from modules.elm.models import LeaveType, LeaveApplication, LeaveBalance
-from modules.elm.services.leave import apply, decide, withdraw, cancel_approved
-from modules.elm.services.policy import create_leave_type, allot_balance
-from modules.elm.api.serializers import ApplyInputSerializer, DecisionInputSerializer, LeaveApplicationSerializer, LeaveBalanceSerializer, LeaveTypeSerializer, LeaveTypeCreateInputSerializer, AllotInputSerializer
+from modules.elm.models import LeaveType, LeaveApplication
+from modules.elm.services.leave import apply, decide, withdraw, cancel_approved, get_balance
+from modules.elm.api.serializers import LeaveTypeSerializer, LeaveApplicationSerializer, ApplyInputSerializer, DecisionInputSerializer, LeaveBalanceSerializer
 from django.utils import timezone
 from core.api.exceptions import BadRequestError
 
 
 class LeaveTypeListView(APIView):
-    permission_classes = [HasPermission("leave_elm.application.view")]
+    permission_classes = [IsAuthenticated, HasPermission("leave_elm.application.view")]
 
     @extend_schema(responses=LeaveTypeSerializer(many=True))
     def get(self, request):
@@ -21,6 +21,8 @@ class LeaveTypeListView(APIView):
 
 
 class MyApplicationsView(APIView):
+    permission_classes = [IsAuthenticated, HasPermission("leave_elm.application.view")]
+
     @extend_schema(responses=LeaveApplicationSerializer(many=True))
     def get(self, request):
         applications = LeaveApplication.objects.filter(employee_id=request.user.user_id).order_by("-created_at")
@@ -35,13 +37,9 @@ class MyApplicationsView(APIView):
         serializer = LeaveApplicationSerializer(application)
         return Response(serializer.data, status=201)
 
-    def get_permissions(self):
-        code = "leave_elm.application.apply" if self.request.method == "POST" else "leave_elm.application.view"
-        return [HasPermission(code)()]
-
 
 class PendingApprovalsView(APIView):
-    permission_classes = [HasPermission("leave_elm.application.approve")]
+    permission_classes = [IsAuthenticated, HasPermission("leave_elm.application.approve")]
 
     @extend_schema(responses=LeaveApplicationSerializer(many=True))
     def get(self, request):
@@ -51,7 +49,7 @@ class PendingApprovalsView(APIView):
 
 
 class DecideView(APIView):
-    permission_classes = [HasPermission("leave_elm.application.approve")]
+    permission_classes = [IsAuthenticated, HasPermission("leave_elm.application.approve")]
 
     @extend_schema(request=DecisionInputSerializer, responses=LeaveApplicationSerializer)
     def post(self, request, pk):
@@ -63,7 +61,7 @@ class DecideView(APIView):
 
 
 class WithdrawView(APIView):
-    permission_classes = [HasPermission("leave_elm.application.apply")]
+    permission_classes = [IsAuthenticated, HasPermission("leave_elm.application.apply")]
 
     @extend_schema(responses=LeaveApplicationSerializer)
     def post(self, request, pk):
@@ -73,7 +71,7 @@ class WithdrawView(APIView):
 
 
 class CancelView(APIView):
-    permission_classes = [HasPermission("leave_elm.application.apply")]
+    permission_classes = [IsAuthenticated, HasPermission("leave_elm.application.apply")]
 
     @extend_schema(responses=LeaveApplicationSerializer)
     def post(self, request, pk):
@@ -83,7 +81,7 @@ class CancelView(APIView):
 
 
 class MyBalanceView(APIView):
-    permission_classes = [HasPermission("leave_elm.balance.view")]
+    permission_classes = [IsAuthenticated, HasPermission("leave_elm.balance.view")]
 
     @extend_schema(responses=LeaveBalanceSerializer(many=True))
     def get(self, request):
@@ -94,30 +92,6 @@ class MyBalanceView(APIView):
             year = int(year)
         except (TypeError, ValueError) as exc:
             raise BadRequestError("year must be a number.", code="invalid_filter") from exc
-        balances = LeaveBalance.objects.filter(employee_id=request.user.user_id, year=year).select_related("leave_type").order_by("leave_type__name")
+        balances = get_balance(request.user.user_id, None, year, for_update=False)
         serializer = LeaveBalanceSerializer(balances, many=True)
-        return Response(serializer.data)
-
-
-class AdminLeaveTypeView(APIView):
-    permission_classes = [HasPermission("leave_elm.policy.manage")]
-
-    @extend_schema(request=LeaveTypeCreateInputSerializer, responses=LeaveTypeSerializer)
-    def post(self, request):
-        serializer = LeaveTypeCreateInputSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        leave_type = create_leave_type(request.user, **serializer.validated_data)
-        serializer = LeaveTypeSerializer(leave_type)
-        return Response(serializer.data, status=201)
-
-
-class AdminAllotBalanceView(APIView):
-    permission_classes = [HasPermission("leave_elm.policy.manage")]
-
-    @extend_schema(request=AllotInputSerializer, responses=LeaveBalanceSerializer)
-    def post(self, request):
-        serializer = AllotInputSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        balance = allot_balance(request.user, **serializer.validated_data)
-        serializer = LeaveBalanceSerializer(balance)
         return Response(serializer.data)

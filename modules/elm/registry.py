@@ -1,5 +1,3 @@
-"""What the server tells the shell about the Employee Leave Management module (ADR-0010)."""
-
 MODULE = {"code": "leave_elm", "label": "Leave Management", "icon": "CalendarBlank", "base_path": "/leave", "nav_section": "Leave", "sort_order": 20, "status": "active"}
 
 NAV_ITEMS = [
@@ -9,6 +7,8 @@ NAV_ITEMS = [
     {"code": "leave.approvals", "label": "Approvals", "icon": "UserCheck", "to": "/leave/approvals", "required_permission": "leave_elm.application.approve", "sort_order": 50},
     {"code": "leave.types", "label": "Leave Types", "icon": "Gear", "to": "/leave/types", "required_permission": "leave_elm.policy.manage", "sort_order": 60},
 ]
+
+"""Permissions this module recognises. No nav: it has no screens of its own."""
 
 PERMISSIONS = [
     ("leave_elm.application.view", "View leave applications"),
@@ -24,7 +24,7 @@ _EMPLOYEE = ["leave_elm.application.view", "leave_elm.application.apply", "leave
 _LEAVE_APPROVER = ["leave_elm.application.view", "leave_elm.application.approve", "leave_elm.balance.view"]
 _LEAVE_ADMIN = ["leave_elm.application.view", "leave_elm.balance.view", "leave_elm.policy.manage"]
 
-#: Keyed by the designation name; each key is a role.
+#: Keyed by the role name.
 ROLE_GRANTS = {
     "Employee": _EMPLOYEE,
     "Leave Approver": _LEAVE_APPROVER,
