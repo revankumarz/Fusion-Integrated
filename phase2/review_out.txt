@@ -1,0 +1,83 @@
+﻿=== r1
+=== u1 (phase1-final snapshot)
+(u1 attempt stopped at ~4900 tokens: model looping, no response logged; rerun with num_predict=2048, repeat_penalty=1.1)
+=== u1 (phase1-final snapshot)
+wrote elm_review/u1_explain.md
+model=qwen2.5-coder:7b num_ctx=8192 prompt_tokens=2354 output_tokens=1286 wall=284s files=1
+=== b1 (phase1-final snapshot)
+model=qwen2.5-coder:7b num_ctx=8192 prompt_tokens=2633 output_tokens=623 wall=142s files=0
+NO FILES PARSED. Raw output:
+```markdown
+# ELM Module Diagnostics
+
+## 1. GET /api/v1/elm/balance returns HTTP 500 on every call (TypeError raised from the call to get_balance in MyBalanceView)
+
+**File:** modules/elm/api/views.py  
+**Function:** MyBalanceView.get  
+**Line:** `balances = get_balance(request.user.user_id, None, year, for_update=False)`
+
+**Explanation:** The `get_balance` function expects a `leave_type` parameter, but it is being passed as `None`. This leads to a `TypeError` when trying to access attributes of `None`.
+
+**Fix:**
+```python
+balances = get_balance(request.user.user_id, leave_type, year, for_update=False)
+```
+
+## 2. `make permissions` (manage.py permission_manifest) fails for the leave_elm module
+
+**File:** modules/elm/registry.py  
+**Function:** PERMISSIONS  
+**Line:** All entries in the list
+
+**Explanation:** The `PERMISSIONS` list is not being used correctly. It should be a dictionary with keys as permission codes and values as descriptions.
+
+**Fix:**
+```python
+PERMISSIONS = {
+    "leave_elm.application.view": "View leave applications",
+    "leave_elm.application.apply": "Apply for leave",
+    "leave_elm.application.approve": "Approve leave applications",
+    "leave_elm.balance.view": "View leave balances",
+    "leave_elm.policy.manage": "Manage leave policies",
+}
+```
+
+## 3. A user with the Employee role gets HTTP 403 on POST /api/v1/elm/applications/<id>/withdraw and /cancel, even for their own pending or approved application
+
+**File:** modules/elm/services/leave.py  
+**Function:** withdraw and cancel_approved  
+**Line:** `if application.employee_id != actor.user_id:`
+
+**Explanation:** The permissions check is incorrectly checking if the actor's user ID is not equal to the application's employee ID, which is always true for the owner of the application.
+
+**Fix:**
+```python
+if application.employee_id == actor.user_id:
+    raise PermissionDeniedError("Cannot withdraw or cancel own application.", code="self_action")
+```
+
+## 4. A request for an application id that does not exist returns HTTP 500 instead of 404
+
+**File:** modules/elm/services/leave.py  
+**Function:** decide, withdraw, cancel_approved  
+**Line:** `application = LeaveApplication.objects.select_for_update().get(id=application_id, status="SUBMITTED")`
+
+**Explanation:** The `get` method does not raise a `NotFoundError` if the object is not found. Instead, it raises a `DoesNotExist` exception.
+
+**Fix:**
+```python
+try:
+    application = LeaveApplication.objects.select_for_update().get(id=application_id, status="SUBMITTED")
+except LeaveApplication.DoesNotExist:
+    raise NotFoundError("Leave application not found.", code="not_found")
+```
+```
+=== r1
+wrote elm_review/r1_services.md
+model=qwen2.5-coder:7b num_ctx=8192 prompt_tokens=4424 output_tokens=408 wall=103s files=1
+=== r2
+wrote elm_review/r2_api_security.md
+model=qwen2.5-coder:7b num_ctx=8192 prompt_tokens=2623 output_tokens=214 wall=49s files=1
+=== r3
+wrote elm_review/r3_fe_be.md
+model=qwen2.5-coder:7b num_ctx=8192 prompt_tokens=2881 output_tokens=683 wall=156s files=1

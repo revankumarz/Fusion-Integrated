@@ -6,6 +6,7 @@ param(
   [string]$Target = "",
   [string]$Model = "qwen2.5-coder:7b",
   [int]$NumCtx = 12288,
+  [int]$NumPredict = -1,
   [string]$Repo = "C:\Users\Revan\Desktop\a\ELM_MODEL_1",
   [string]$Log = "C:\Users\Revan\Desktop\a\logs\model1_chat.md"
 )
@@ -34,7 +35,7 @@ $user = "Repository context files:`n$ctx`n`nTASK:`n$task"
 $body = @{
   model    = $Model
   stream   = $false
-  options  = @{ num_ctx = $NumCtx; temperature = 0.2 }
+  options  = @{ num_ctx = $NumCtx; temperature = 0.2; num_predict = $NumPredict; repeat_penalty = 1.1 }
   messages = @(@{ role = "system"; content = $system }, @{ role = "user"; content = $user })
 } | ConvertTo-Json -Depth 5
 

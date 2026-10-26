@@ -1,0 +1,11 @@
+Phase 2, Build/Run stage. We ran the Phase-1 ELM module inside Fusion (manage.py check and migrate succeed) and logged in through IAM. Observed problems:
+
+1. GET /api/v1/elm/balance returns HTTP 500 on every call (TypeError raised from the call to get_balance in MyBalanceView).
+2. `make permissions` (manage.py permission_manifest) fails for the leave_elm module, so the ELM roles cannot be published to IAM and no user can get them.
+3. A user with the Employee role gets HTTP 403 on POST /api/v1/elm/applications/<id>/withdraw and /cancel, even for their own pending or approved application.
+4. A request for an application id that does not exist returns HTTP 500 instead of 404.
+
+Using modules/elm/registry.py, modules/elm/api/views.py and modules/elm/services/leave.py, diagnose the root cause of each problem: name the exact file, function and line responsible and explain why it fails. Then give the minimal fix for each.
+
+Do NOT change any code. Output exactly one file:
+FILE: elm_review/b1_diagnose.md

@@ -1,0 +1,10 @@
+Phase 2, Understand stage. This is the Phase-1 ELM module you generated earlier (tag phase1-final). Explain it before we change anything.
+
+Using modules/elm/models.py, modules/elm/registry.py, modules/elm/api/urls.py and modules/elm/services/leave.py:
+1. Summarise the architecture: models and their fields, the service functions, the API endpoints (method + URL + permission), and the roles in ROLE_GRANTS.
+2. Map what is implemented to these ELM use cases and mark each Implemented / Partial / Missing:
+   UC-001 Apply for leave, UC-002 Respond to substitute request, UC-003 Unit Head review, UC-004 Verify/route higher-sanction, UC-005 Final sanctioning decision, UC-007 Withdraw pending application, UC-008 Cancel approved leave, UC-009 Extension, UC-010/011 Resumption, UC-012 View balances/history, UC-013 Printable application, UC-014 Policy/hierarchy configuration, UC-015 Holiday calendar, UC-020 Year-end processing.
+3. List anything that looks incomplete or inconsistent (for example permissions used in code but not declared, or declared but never used).
+
+Do NOT change any code. Output exactly one file:
+FILE: elm_review/u1_explain.md

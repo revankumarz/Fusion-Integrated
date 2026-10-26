@@ -3043,3 +3043,347 @@ export default function MyLeavePage() {
 }
 ```
 
+
+# ollama-gen 2026-10-26T20:25:29 (model=qwen2.5-coder:7b num_ctx=8192 prompt_tokens=2354 output_tokens=1286 wall=284s)
+
+#### Prompt (C:\Users\Revan\Desktop\a\logs\phase2\prompts\p2_und_01_explain.txt; context: modules/elm/models.py, modules/elm/registry.py, modules/elm/api/urls.py, modules/elm/services/leave.py)
+
+Phase 2, Understand stage. This is the Phase-1 ELM module you generated earlier (tag phase1-final). Explain it before we change anything.
+
+Using modules/elm/models.py, modules/elm/registry.py, modules/elm/api/urls.py and modules/elm/services/leave.py:
+1. Summarise the architecture: models and their fields, the service functions, the API endpoints (method + URL + permission), and the roles in ROLE_GRANTS.
+2. Map what is implemented to these ELM use cases and mark each Implemented / Partial / Missing:
+   UC-001 Apply for leave, UC-002 Respond to substitute request, UC-003 Unit Head review, UC-004 Verify/route higher-sanction, UC-005 Final sanctioning decision, UC-007 Withdraw pending application, UC-008 Cancel approved leave, UC-009 Extension, UC-010/011 Resumption, UC-012 View balances/history, UC-013 Printable application, UC-014 Policy/hierarchy configuration, UC-015 Holiday calendar, UC-020 Year-end processing.
+3. List anything that looks incomplete or inconsistent (for example permissions used in code but not declared, or declared but never used).
+
+Do NOT change any code. Output exactly one file:
+FILE: elm_review/u1_explain.md
+
+
+#### Model response
+
+FILE: elm_review/u1_explain.md
+```markdown
+# ELM Module Architecture Overview
+
+## Models and Their Fields
+
+### LeaveType
+- **Fields**: 
+  - `code`: Unique identifier for the leave type.
+  - `name`: Name of the leave type.
+  - `max_days_per_year`: Maximum number of days allowed per year for this leave type.
+  - `requires_document`: Boolean indicating if a document is required for this leave type.
+  - `is_active`: Boolean indicating if the leave type is active.
+
+### LeaveBalance
+- **Fields**: 
+  - `employee_id`: ID of the employee.
+  - `leave_type`: Foreign key to the `LeaveType` model.
+  - `year`: Year for which the balance is calculated.
+  - `allotted`: Total days allotted for this leave type in the specified year.
+  - `used`: Total days used for this leave type in the specified year.
+
+### LeaveApplication
+- **Fields**: 
+  - `employee_id`: ID of the employee who applied for leave.
+  - `leave_type`: Foreign key to the `LeaveType` model.
+  - `start_date`: Start date of the leave period.
+  - `end_date`: End date of the leave period.
+  - `days`: Total number of days requested for leave.
+  - `reason`: Reason for applying for leave.
+  - `status`: Current status of the leave application (DRAFT, SUBMITTED, APPROVED, REJECTED, CANCELLED).
+  - `approver_id`: ID of the approver if the application is in a pending state.
+  - `remarks`: Additional remarks related to the application.
+  - `decided_at`: Timestamp when the application was decided.
+
+## Service Functions
+
+### apply
+- **Purpose**: Allows an employee to apply for leave.
+- **Parameters**:
+  - `actor`: The user making the request.
+  - `leave_type_id`: ID of the leave type.
+  - `start_date`: Start date of the leave period.
+  - `end_date`: End date of the leave period.
+  - `reason`: Reason for applying for leave.
+- **Returns**: The created `LeaveApplication` object.
+
+### decide
+- **Purpose**: Approves or rejects a leave application.
+- **Parameters**:
+  - `actor`: The user making the request.
+  - `application_id`: ID of the leave application to be decided.
+  - `approve`: Boolean indicating whether to approve or reject the application.
+  - `remarks`: Additional remarks related to the decision.
+- **Returns**: The updated `LeaveApplication` object.
+
+### withdraw
+- **Purpose**: Withdraws a pending leave application.
+- **Parameters**:
+  - `actor`: The user making the request.
+  - `application_id`: ID of the leave application to be withdrawn.
+- **Returns**: The updated `LeaveApplication` object.
+
+### cancel_approved
+- **Purpose**: Cancels an approved leave application that has not yet started.
+- **Parameters**:
+  - `actor`: The user making the request.
+  - `application_id`: ID of the leave application to be cancelled.
+- **Returns**: The updated `LeaveApplication` object.
+
+## API Endpoints
+
+### LeaveTypeListView
+- **Method**: GET
+- **URL**: `/leave/types`
+- **Permission**: None (public)
+- **Description**: Lists all available leave types.
+
+### MyApplicationsView
+- **Method**: GET
+- **URL**: `/leave/applications`
+- **Permission**: `leave_elm.application.view`
+- **Description**: Lists applications made by the current user.
+
+### PendingApprovalsView
+- **Method**: GET
+- **URL**: `/leave/applications/pending`
+- **Permission**: `leave_elm.application.approve`
+- **Description**: Lists pending leave applications for approval.
+
+### DecideView
+- **Method**: POST
+- **URL**: `/leave/applications/<int:pk>/decide`
+- **Permission**: `leave_elm.application.approve`
+- **Description**: Approves or rejects a specific leave application.
+
+### WithdrawView
+- **Method**: POST
+- **URL**: `/leave/applications/<int:pk>/withdraw`
+- **Permission**: `leave_elm.application.withdraw`
+- **Description**: Withdraws a pending leave application made by the current user.
+
+### CancelView
+- **Method**: POST
+- **URL**: `/leave/applications/<int:pk>/cancel`
+- **Permission**: `leave_elm.application.cancel`
+- **Description**: Cancels an approved leave application that has not yet started.
+
+### MyBalanceView
+- **Method**: GET
+- **URL**: `/leave/balance`
+- **Permission**: `leave_elm.balance.view`
+- **Description**: Retrieves the current leave balance for the current user.
+
+## Roles and Permissions
+
+### ROLE_GRANTS
+- **Employee**: Can view and apply for leave.
+- **Leave Approver**: Can view, approve, and reject leave applications.
+- **Leave Admin**: Can manage leave policies and view balances.
+
+## Mapping to ELM Use Cases
+
+| UC-001 Apply for leave | Implemented |
+|-----------------------|-------------|
+| UC-002 Respond to substitute request | Missing |
+| UC-003 Unit Head review | Partial (only approval/rejection) |
+| UC-004 Verify/route higher-sanction | Missing |
+| UC-005 Final sanctioning decision | Implemented |
+| UC-007 Withdraw pending application | Implemented |
+| UC-008 Cancel approved leave | Implemented |
+| UC-009 Extension | Missing |
+| UC-010/011 Resumption | Missing |
+| UC-012 View balances/history | Implemented |
+| UC-013 Printable application | Missing |
+| UC-014 Policy/hierarchy configuration | Missing |
+| UC-015 Holiday calendar | Missing |
+| UC-020 Year-end processing | Missing |
+
+## Incomplete/Inconsistent Items
+
+- **Permissions**: 
+  - `leave_elm.application.approve` is used in the code but not declared.
+  - `leave_elm.balance.view` is used in the code but not declared.
+
+```
+
+
+# ollama-gen 2026-10-26T20:27:52 (model=qwen2.5-coder:7b num_ctx=8192 prompt_tokens=2633 output_tokens=623 wall=142s)
+
+#### Prompt (C:\Users\Revan\Desktop\a\logs\phase2\prompts\p2_build_01_diagnose.txt; context: modules/elm/registry.py, modules/elm/api/views.py, modules/elm/services/leave.py)
+
+Phase 2, Build/Run stage. We ran the Phase-1 ELM module inside Fusion (manage.py check and migrate succeed) and logged in through IAM. Observed problems:
+
+1. GET /api/v1/elm/balance returns HTTP 500 on every call (TypeError raised from the call to get_balance in MyBalanceView).
+2. `make permissions` (manage.py permission_manifest) fails for the leave_elm module, so the ELM roles cannot be published to IAM and no user can get them.
+3. A user with the Employee role gets HTTP 403 on POST /api/v1/elm/applications/<id>/withdraw and /cancel, even for their own pending or approved application.
+4. A request for an application id that does not exist returns HTTP 500 instead of 404.
+
+Using modules/elm/registry.py, modules/elm/api/views.py and modules/elm/services/leave.py, diagnose the root cause of each problem: name the exact file, function and line responsible and explain why it fails. Then give the minimal fix for each.
+
+Do NOT change any code. Output exactly one file:
+FILE: elm_review/b1_diagnose.md
+
+
+#### Model response
+
+```markdown
+# ELM Module Diagnostics
+
+## 1. GET /api/v1/elm/balance returns HTTP 500 on every call (TypeError raised from the call to get_balance in MyBalanceView)
+
+**File:** modules/elm/api/views.py  
+**Function:** MyBalanceView.get  
+**Line:** `balances = get_balance(request.user.user_id, None, year, for_update=False)`
+
+**Explanation:** The `get_balance` function expects a `leave_type` parameter, but it is being passed as `None`. This leads to a `TypeError` when trying to access attributes of `None`.
+
+**Fix:**
+```python
+balances = get_balance(request.user.user_id, leave_type, year, for_update=False)
+```
+
+## 2. `make permissions` (manage.py permission_manifest) fails for the leave_elm module
+
+**File:** modules/elm/registry.py  
+**Function:** PERMISSIONS  
+**Line:** All entries in the list
+
+**Explanation:** The `PERMISSIONS` list is not being used correctly. It should be a dictionary with keys as permission codes and values as descriptions.
+
+**Fix:**
+```python
+PERMISSIONS = {
+    "leave_elm.application.view": "View leave applications",
+    "leave_elm.application.apply": "Apply for leave",
+    "leave_elm.application.approve": "Approve leave applications",
+    "leave_elm.balance.view": "View leave balances",
+    "leave_elm.policy.manage": "Manage leave policies",
+}
+```
+
+## 3. A user with the Employee role gets HTTP 403 on POST /api/v1/elm/applications/<id>/withdraw and /cancel, even for their own pending or approved application
+
+**File:** modules/elm/services/leave.py  
+**Function:** withdraw and cancel_approved  
+**Line:** `if application.employee_id != actor.user_id:`
+
+**Explanation:** The permissions check is incorrectly checking if the actor's user ID is not equal to the application's employee ID, which is always true for the owner of the application.
+
+**Fix:**
+```python
+if application.employee_id == actor.user_id:
+    raise PermissionDeniedError("Cannot withdraw or cancel own application.", code="self_action")
+```
+
+## 4. A request for an application id that does not exist returns HTTP 500 instead of 404
+
+**File:** modules/elm/services/leave.py  
+**Function:** decide, withdraw, cancel_approved  
+**Line:** `application = LeaveApplication.objects.select_for_update().get(id=application_id, status="SUBMITTED")`
+
+**Explanation:** The `get` method does not raise a `NotFoundError` if the object is not found. Instead, it raises a `DoesNotExist` exception.
+
+**Fix:**
+```python
+try:
+    application = LeaveApplication.objects.select_for_update().get(id=application_id, status="SUBMITTED")
+except LeaveApplication.DoesNotExist:
+    raise NotFoundError("Leave application not found.", code="not_found")
+```
+```
+
+
+# ollama-gen 2026-10-26T20:29:37 (model=qwen2.5-coder:7b num_ctx=8192 prompt_tokens=4424 output_tokens=408 wall=103s)
+
+#### Prompt (C:\Users\Revan\Desktop\a\logs\phase2\prompts\p2_rev_01_services.txt; context: specs/br_excerpt.md, modules/elm/models.py, modules/elm/services/leave.py, modules/elm/services/policy.py)
+
+Phase 2 code review, prompt 1 of 3: business rules and data handling.
+
+Review modules/elm/services/leave.py, modules/elm/services/policy.py and modules/elm/models.py against the ELM business rules in specs/br_excerpt.md.
+Check: leave day counting, overlap check, balance check and balance updates (approve, cancel), state transitions (SUBMITTED/APPROVED/REJECTED/CANCELLED), transactions and row locking, ownership checks, error codes (400/403/404/409), and any business rule from br_excerpt.md that the code breaks or does not implement.
+
+Do NOT change any code. Output exactly one file:
+FILE: elm_review/r1_services.md
+A markdown table with columns: # | File / function | Rule (BR id if any) | Severity (High/Medium/Low) | Problem | Suggested fix.
+List only real problems you can point to in the code, most severe first. After the table, list the business rules from br_excerpt.md that are not implemented at all.
+
+
+#### Model response
+
+FILE: elm_review/r1_services.md
+```markdown
+# | File / function | Rule (BR id if any) | Severity (High/Medium/Low) | Problem | Suggested fix.
+
+1 | modules/elm/services/leave.py: apply() | BR-EL-012 | High | Overlap check does not handle different CL halves on the same date correctly. | Implement a more complex overlap check that allows for different CL halves on the same date if they occupy different halves.
+2 | modules/elm/services/leave.py: apply() | BR-EL-034 | Medium | There is no edit function, but there is no enforcement of the "No post-submission modification" rule. | Implement a check to ensure that any changes made after submission are not allowed and require a new application.
+3 | modules/elm/services/leave.py: decide() | BR-EL-016 | Medium | The decision logic does not handle the case where an employee is trying to approve their own leave request. | Add a check to prevent self-approval and raise a PermissionDeniedError if it occurs.
+4 | modules/elm/services/leave.py: cancel_approved() | BR-EL-027 | Medium | The cancellation logic does not handle the case where an employee is trying to cancel someone else's approved leave request. | Add a check to prevent cancellation of other employees' leave requests and raise a PermissionDeniedError if it occurs.
+5 | modules/elm/services/policy.py: create_leave_type() | BR-EL-037 | Medium | The policy management functions do not enforce the "Maintenance is not sanctioning" rule. | Add checks to ensure that no actions taken in these functions result in any form of sanctioning.
+
+Business rules from br_excerpt.md that are not implemented at all:
+
+1. BR-EL-026: RETIRED IDENTIFIER
+2. BR-EL-035: Actionable task assignment notification
+```
+
+
+# ollama-gen 2026-10-26T20:30:29 (model=qwen2.5-coder:7b num_ctx=8192 prompt_tokens=2623 output_tokens=214 wall=49s)
+
+#### Prompt (C:\Users\Revan\Desktop\a\logs\phase2\prompts\p2_rev_02_api_security.txt; context: modules/elm/registry.py, modules/elm/api/serializers.py, modules/elm/api/urls.py, modules/elm/api/views.py)
+
+Phase 2 code review, prompt 2 of 3: access control, API and security.
+
+Review modules/elm/api/views.py, modules/elm/api/serializers.py, modules/elm/api/urls.py and modules/elm/registry.py.
+Check: every endpoint has the right permission for its action, roles in ROLE_GRANTS match what each endpoint needs, object-level access (can a user read or change another user's application or balance?), self-approval, input validation in serializers (dates, negative or huge numbers, string lengths), information leaks in error responses, and consistency between the permissions declared in registry.py and the ones the code uses.
+
+Do NOT change any code. Output exactly one file:
+FILE: elm_review/r2_api_security.md
+A markdown table with columns: # | File / view | Severity (High/Medium/Low) | Problem | Suggested fix.
+List only real problems you can point to in the code, most severe first.
+
+
+#### Model response
+
+FILE: elm_review/r2_api_security.md
+```markdown
+| # | File / view | Severity (High/Medium/Low) | Problem | Suggested fix. |
+|---|-------------|------------------------------|---------|------------------|
+| 1 | modules/elm/api/views.py | High | Self-approval is allowed for leave applications, which can lead to abuse. | Restrict self-approval or implement additional checks. |
+| 2 | modules/elm/api/views.py | Medium | Input validation for dates and numbers in serializers is not comprehensive enough. | Add more specific validations (e.g., date range, positive numbers). |
+| 3 | modules/elm/api/views.py | Medium | Error responses do not provide detailed information about the cause of the error. | Enhance error messages to include more context or use a consistent format. |
+| 4 | modules/elm/api/views.py | Low | Object-level access control is missing for leave balances and applications. | Implement checks to ensure users can only access their own data. |
+```
+
+
+# ollama-gen 2026-10-26T20:33:06 (model=qwen2.5-coder:7b num_ctx=8192 prompt_tokens=2881 output_tokens=683 wall=156s)
+
+#### Prompt (C:\Users\Revan\Desktop\a\logs\phase2\prompts\p2_rev_03_fe_be.txt; context: modules/elm/api/urls.py, modules/elm/api/serializers.py, client/src/modules/elm/api.ts, client/src/modules/elm/pages/MyLeavePage.tsx)
+
+Phase 2 code review, prompt 3 of 3: frontend/backend consistency.
+
+Compare the frontend client/src/modules/elm/api.ts and client/src/modules/elm/pages/MyLeavePage.tsx with the backend modules/elm/api/urls.py and modules/elm/api/serializers.py.
+Check: every URL the frontend calls exists in urls.py (the http client base URL is already "/api/v1", and the ELM urls are mounted at "elm/"), HTTP methods match, request body field names and types match the input serializers, response types in api.ts match the serializer fields, status values used by the frontend match the backend status choices, and which cache queries are refreshed after each mutation.
+
+Do NOT change any code. Output exactly one file:
+FILE: elm_review/r3_fe_be.md
+A markdown table with columns: # | Frontend location | Backend location | Severity (High/Medium/Low) | Mismatch | Suggested fix.
+List only real mismatches you can point to in the code, most severe first.
+
+
+#### Model response
+
+FILE: elm_review/r3_fe_be.md
+```markdown
+# | Frontend location | Backend location | Severity (High/Medium/Low) | Mismatch | Suggested fix.
+---|------------------|--------------------|----------------------------|----------|-----------------
+1  | client/src/modules/elm/api.ts<br>useApplyLeave<br>`mutationFn`<br>POST `/elm/applications`<br>Request body: `{ leave_type: number; start_date: string; end_date: string; reason: string }` | modules/elm/api/views.py<br>`MyApplicationsView`<br>POST `/elm/applications`<br>Serializer: `ApplyInputSerializer`<br>Fields: `leave_type`, `start_date`, `end_date`, `reason` | Low | None | 
+2  | client/src/modules/elm/pages/MyLeavePage.tsx<br>`handleWithdraw`<br>Button click handler for withdrawing an application | modules/elm/api/views.py<br>`WithdrawView`<br>POST `/elm/applications/<int:pk>/withdraw`<br>Serializer: `None` (No input required) | Low | None | 
+3  | client/src/modules/elm/pages/MyLeavePage.tsx<br>`handleCancel`<br>Button click handler for canceling an application | modules/elm/api/views.py<br>`CancelView`<br>POST `/elm/applications/<int:pk>/cancel`<br>Serializer: `None` (No input required) | Low | None | 
+4  | client/src/modules/elm/pages/MyLeavePage.tsx<br>DataTable column for "Status" rendering | modules/elm/api/serializers.py<br>`LeaveApplicationSerializer`<br>Field: `status`<br>Status choices in backend: `SUBMITTED`, `APPROVED`, `REJECTED`, `CANCELLED` | High | Status values used by frontend do not match backend status choices. Frontend uses lowercase statuses, while backend uses uppercase. | Update frontend to use uppercase status values (`"submitted"`, `"approved"`, `"rejected"`, `"cancelled"`).
+5  | client/src/modules/elm/api.ts<br>useCreateLeaveType<br>`mutationFn`<br>POST `/elm/admin/types`<br>Request body: `{ code: string; name: string; max_days_per_year: number; requires_document?: boolean }` | modules/elm/api/views.py<br>`AdminLeaveTypeView`<br>POST `/elm/admin/types`<br>Serializer: `LeaveTypeCreateInputSerializer`<br>Fields: `code`, `name`, `max_days_per_year`, `requires_document` | Low | None | 
+6  | client/src/modules/elm/api.ts<br>useAllotBalance<br>`mutationFn`<br>POST `/elm/admin/balances`<br>Request body: `{ employee_id: number; leave_type_id: number; year: number; allotted: number }` | modules/elm/api/views.py<br>`AdminAllotBalanceView`<br>POST `/elm/admin/balances`<br>Serializer: `AllotInputSerializer`<br>Fields: `employee_id`, `leave_type_id`, `year`, `allotted` | Low | None | 
+```
+

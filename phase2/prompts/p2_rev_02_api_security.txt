@@ -1,0 +1,9 @@
+Phase 2 code review, prompt 2 of 3: access control, API and security.
+
+Review modules/elm/api/views.py, modules/elm/api/serializers.py, modules/elm/api/urls.py and modules/elm/registry.py.
+Check: every endpoint has the right permission for its action, roles in ROLE_GRANTS match what each endpoint needs, object-level access (can a user read or change another user's application or balance?), self-approval, input validation in serializers (dates, negative or huge numbers, string lengths), information leaks in error responses, and consistency between the permissions declared in registry.py and the ones the code uses.
+
+Do NOT change any code. Output exactly one file:
+FILE: elm_review/r2_api_security.md
+A markdown table with columns: # | File / view | Severity (High/Medium/Low) | Problem | Suggested fix.
+List only real problems you can point to in the code, most severe first.

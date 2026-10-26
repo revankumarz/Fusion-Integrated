@@ -1,0 +1,9 @@
+Phase 2 code review, prompt 1 of 3: business rules and data handling.
+
+Review modules/elm/services/leave.py, modules/elm/services/policy.py and modules/elm/models.py against the ELM business rules in specs/br_excerpt.md.
+Check: leave day counting, overlap check, balance check and balance updates (approve, cancel), state transitions (SUBMITTED/APPROVED/REJECTED/CANCELLED), transactions and row locking, ownership checks, error codes (400/403/404/409), and any business rule from br_excerpt.md that the code breaks or does not implement.
+
+Do NOT change any code. Output exactly one file:
+FILE: elm_review/r1_services.md
+A markdown table with columns: # | File / function | Rule (BR id if any) | Severity (High/Medium/Low) | Problem | Suggested fix.
+List only real problems you can point to in the code, most severe first. After the table, list the business rules from br_excerpt.md that are not implemented at all.

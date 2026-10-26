@@ -92,6 +92,12 @@ Build/run: `manage.py check` clean, `migrate` creates elm tables (verified 2026-
 - Result: **`make check` exit 0** — Django check, migrations, ruff, import contracts, cross-module FK, nav/routes, permission manifest, schema and full pytest all pass (check.txt).
 - Committed on `elm-phase2-24BCS253`: Backend fixes, Leave tests, Frontend api, Leave pages.
 
+### 2026-10-26 — qwen used for Understand, Build/Run and Review
+- The 12 Oct understand/build/review work had been done manually. To document those stages with the code LLM, 5 qwen prompts were run on 26 Oct: Understand and Build/Run against the preserved Phase-1 code (`phase1-final`), Review ×3 against the current code. Details and verdict on every finding: `05_qwen_review_check.md`.
+- First Understand attempt looped (~4,900 tokens, stopped, not logged) → added `num_predict`/`repeat_penalty` to ollama-gen.ps1.
+- qwen diagnosed 1 of 4 build failures correctly; most review findings were false positives already covered by tests. One real defect (r2-2: allotment could exceed the leave type's max days/year, no upper bounds) → **manual fix** + new test; ELM tests **15/15**, `make check` exit 0. Commit `Review fixes`, pushed to PR #273.
+- Phase-2 qwen prompts total: **23**.
+
 ## Phase-2 priorities
 1. P0 — make it work end-to-end through Fusion: D1, D2, D3, D4, D5, D6 (+ verify with tests and real login).
 2. P1 — tests for services and API (role checks, BR-EL-011/012/022/023/034).

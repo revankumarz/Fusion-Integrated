@@ -1,7 +1,7 @@
 # Assignment 6B — Phase 2 proof (ELM, roll no 24BCS253)
 
 Baseline: Phase 1 = PR #19, tag `phase1-final` (5e17a70). Phase 2 branch: `elm-phase2-24BCS253`.
-Model: qwen2.5-coder:7b (Q4_K_M) via Ollama, used through `logs/ollama-gen.ps1`. Every prompt and full response is in `model_chat.md` (18 prompts; prompt files in `prompts/`).
+Model: qwen2.5-coder:7b (Q4_K_M) via Ollama, used through `logs/ollama-gen.ps1`. Every prompt and full response is in `model_chat.md` (23 prompts; prompt files in `prompts/`). qwen review/diagnosis findings checked one by one in `05_qwen_review_check.md`.
 
 ## What was reviewed
 Full review, use-case coverage table and defect list: `01_review.md` (D1–D10).
@@ -20,7 +20,7 @@ Full review, use-case coverage table and defect list: `01_review.md` (D1–D10).
 | Check | Result | File |
 |---|---|---|
 | End-to-end through real Fusion + IAM logins | 21/21 | `e2e_run2.txt` |
-| ELM pytest | 14/14 | `pytest_elm_run4.txt` |
+| ELM pytest | 14/14, then 15/15 after the review fix | `pytest_elm_run4.txt`, `check.txt` |
 | Full Fusion test suite | green, no regressions | `01_review.md` |
 | TypeScript errors in ELM pages | 58 → 36 → 33 → 27 → 7 → **0** | `tsc_run1.txt` … `tsc_run5.txt` |
 | `make check-client` (typecheck + client tests + build) | pass | — |

@@ -1,0 +1,9 @@
+Phase 2 code review, prompt 3 of 3: frontend/backend consistency.
+
+Compare the frontend client/src/modules/elm/api.ts and client/src/modules/elm/pages/MyLeavePage.tsx with the backend modules/elm/api/urls.py and modules/elm/api/serializers.py.
+Check: every URL the frontend calls exists in urls.py (the http client base URL is already "/api/v1", and the ELM urls are mounted at "elm/"), HTTP methods match, request body field names and types match the input serializers, response types in api.ts match the serializer fields, status values used by the frontend match the backend status choices, and which cache queries are refreshed after each mutation.
+
+Do NOT change any code. Output exactly one file:
+FILE: elm_review/r3_fe_be.md
+A markdown table with columns: # | Frontend location | Backend location | Severity (High/Medium/Low) | Mismatch | Suggested fix.
+List only real mismatches you can point to in the code, most severe first.
