@@ -33,7 +33,17 @@ class LeaveApplication(TimeStampedModel):
     end_date = models.DateField()
     days = models.PositiveSmallIntegerField()
     reason = models.TextField()
-    status = models.CharField(max_length=16, choices=[("DRAFT", "Draft"), ("SUBMITTED", "Submitted"), ("APPROVED", "Approved"), ("REJECTED", "Rejected"), ("CANCELLED", "Cancelled")], default="DRAFT")
+    status = models.CharField(
+        max_length=16,
+        choices=[
+            ("DRAFT", "Draft"),
+            ("SUBMITTED", "Submitted"),
+            ("APPROVED", "Approved"),
+            ("REJECTED", "Rejected"),
+            ("CANCELLED", "Cancelled"),
+        ],
+        default="DRAFT",
+    )
     approver_id = models.IntegerField(null=True, blank=True)
     remarks = models.TextField(blank=True)
     decided_at = models.DateTimeField(null=True, blank=True)
