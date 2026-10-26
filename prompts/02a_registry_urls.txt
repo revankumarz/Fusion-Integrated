@@ -1,0 +1,14 @@
+Step 2a (wiring). Update two files.
+
+1. modules/elm/registry.py : keep PERMISSIONS, SYSTEM_PERMISSIONS and ROLE_GRANTS exactly as they are. Change the module docstring to describe the ELM module. Add, above PERMISSIONS, a MODULE dict and a NAV_ITEMS list in the same shape as modules/placement/registry.py:
+   MODULE = {"code": "leave_elm", "label": "Leave Management", "icon": "CalendarBlank", "base_path": "/leave", "nav_section": "Leave", "sort_order": 20, "status": "active"}
+   (the code MUST be "leave_elm" because every permission starts with "leave_elm.")
+   NAV_ITEMS (keys: code, label, icon, to, required_permission, sort_order):
+   - "leave.apply", "Apply for Leave", icon "PencilSimple", to "/leave/apply", permission leave_elm.application.apply, sort 10
+   - "leave.mine", "My Applications", icon "ListChecks", to "/leave/mine", permission leave_elm.application.view, sort 20
+   - "leave.balance", "Leave Balance", icon "Scales", to "/leave/balance", permission leave_elm.balance.view, sort 30
+   - "leave.approvals", "Approvals", icon "UserCheck", to "/leave/approvals", permission leave_elm.application.approve, sort 50
+   - "leave.types", "Leave Types", icon "Gear", to "/leave/types", permission leave_elm.policy.manage, sort 60
+
+2. config/urls.py : keep every existing line unchanged. Add one line after the placement line:
+   path("api/v1/elm/", include("modules.elm.api.urls")),

@@ -1,0 +1,18 @@
+Phase 2: 5 of 14 tests now pass. The 9 failing ones still have bugs in the TEST code. Fix exactly these and output modules/elm/tests/test_leave.py complete. Do not change passing tests.
+
+Rules every test must follow:
+- Never hardcode dates. Always use D0 = datetime.date.today() + datetime.timedelta(days=30); end dates are D0 + timedelta(days=n). Hardcoded "2023-10-01" has no LeaveBalance for that year, so the server answers 404 "no_balance".
+- The APPLICANT is user 1001 with "leave_elm.application.apply". To approve, switch to the APPROVER: c2 = _client(stub_iam, 2002, "leave_elm.application.approve"). A user without the apply permission gets 403 when applying.
+- The decide body is {"approve": True, "remarks": ""} (or False to reject), NOT {"status": "APPROVED"}.
+- Withdraw and cancel are done by the applicant 1001, and for cancel the application must first be approved by 2002.
+
+Per test:
+- test_insufficient_balance_is_rejected: apply for 9 days (D0 to D0+8). The balance is 8, so expect 409. Do not send "days".
+- test_approve_uses_balance: 1001 applies 3 days (D0..D0+2) -> 201; 2002 decides {"approve": True} -> 200 and status "APPROVED"; balance.used == 3.
+- test_approver_cannot_approve_own_application: one client for user 1001 holding BOTH "leave_elm.application.apply" and "leave_elm.application.approve"; it applies, then decides its own id -> 403.
+- test_decide_twice_is_conflict: 1001 applies, 2002 approves (200), 2002 approves again -> 409.
+- test_unknown_application_is_404: 2002 posts {"approve": True} to applications/999999/decide -> 404.
+- test_withdraw_pending: 1001 applies then withdraws -> 200 and status "CANCELLED". Before that, a third user 3003 with apply permission tries to withdraw it -> 403.
+- test_cancel_approved_restores_balance: 1001 applies 3 days, 2002 approves, 1001 posts applications/<id>/cancel -> 200 "CANCELLED", balance.used == 0.
+- test_no_edit_endpoint: there is no edit endpoint; PUT and PATCH to f"/api/v1/elm/applications/{app_id}" must return 404 or 405: assert response.status_code in (404, 405).
+- test_balance_lists_available: the balance response is a JSON LIST, so use response.json()[0]["available"] == 8.

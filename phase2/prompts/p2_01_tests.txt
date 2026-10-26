@@ -1,0 +1,28 @@
+Phase 2, step: write automated tests for the ELM module. Use pytest + pytest-django exactly like specs/placement_test_api_excerpt.py and the fixtures in specs/conftest_excerpt.py (stub_iam, make_session). Create two files.
+
+1. modules/elm/tests/__init__.py : empty.
+
+2. modules/elm/tests/test_leave.py :
+   - `pytestmark = pytest.mark.django_db`
+   - imports: datetime, pytest, rest_framework.test.APIClient, `from conftest import make_session`, models from modules.elm.models.
+   - helper `def _client(stub_iam, user_id, *perms)`: stub_iam(make_session(user_id=user_id, kind="faculty", modules=("leave_elm",), permissions=perms)); return an APIClient with credentials(HTTP_AUTHORIZATION="Token abc").
+   - fixture `leave_type` creating LeaveType(code="CL", name="Casual Leave", max_days_per_year=8).
+   - fixture `balance` creating LeaveBalance(employee_id=1001, leave_type=leave_type, year=<the year of the start date used>, allotted=8, used=0).
+   - Use a start date 30 days in the future: `D0 = datetime.date.today() + datetime.timedelta(days=30)`.
+   - URLs are under /api/v1/elm/ : "applications" (GET list, POST apply), "applications/pending", "applications/<id>/decide", "applications/<id>/withdraw", "applications/<id>/cancel", "balance", "admin/types", "admin/balances".
+   Write these tests (one function each):
+   a. test_apply_counts_days_inclusive  (BR-EL-011): POST 3-day application as user 1001 with apply perm -> 201, days == 3, status SUBMITTED.
+   b. test_overlap_is_rejected  (BR-EL-012): second overlapping application -> 409.
+   c. test_insufficient_balance_is_rejected: application longer than the balance -> 409.
+   d. test_end_before_start_is_rejected: -> 400.
+   e. test_apply_needs_apply_permission: client with only leave_elm.application.view -> POST returns 403.
+   f. test_approve_uses_balance: approver user 2002 with leave_elm.application.approve approves -> 200, status APPROVED, and LeaveBalance.used == 3.
+   g. test_approver_cannot_approve_own_application  (BR-EL-036): user 1001 holding both apply and approve perms -> decide own application -> 403.
+   h. test_decide_twice_is_conflict: second decide -> 409.
+   i. test_unknown_application_is_404.
+   j. test_withdraw_pending  (BR-EL-022): applicant withdraws -> 200 CANCELLED; another user (3003 with apply perm) withdrawing it -> 403.
+   k. test_cancel_approved_restores_balance  (BR-EL-023): after approval, applicant cancels -> 200 CANCELLED and LeaveBalance.used == 0.
+   l. test_no_edit_endpoint  (BR-EL-034): PUT and PATCH on applications/<id>/ ... return 405 or 404.
+   m. test_balance_lists_available: GET balance -> 200 and the row has available == 8.
+   n. test_admin_creates_leave_type_and_employee_cannot: user 4004 with leave_elm.policy.manage POST admin/types -> 201; user 1001 with only apply -> 403.
+   To switch user in a test, call _client(stub_iam, ...) again; it replaces the fake session.

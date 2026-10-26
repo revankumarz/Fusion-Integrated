@@ -1,0 +1,9 @@
+Phase 2: 10 of your 14 tests in modules/elm/tests/test_leave.py fail, and the failures are bugs in the TESTS, not in the module (the same flows pass in a live end-to-end run). Fix only the test file and output it complete.
+
+Diagnosis from running pytest:
+1. Every POST to /api/v1/elm/applications returns 400 because the tests send "leave_type": balance.leave_type.code (the string "CL"). ApplyInputSerializer in modules/elm/api/serializers.py declares leave_type = IntegerField: it must be the LeaveType primary key, i.e. balance.leave_type.id. Also stop sending "days": the server computes it.
+2. Pass dates as ISO strings (D0.isoformat()) and post with format="json", e.g. c.post(url, {...}, format="json").
+3. test_balance_lists_available gets 403 because the client only has leave_elm.application.apply; GET /api/v1/elm/balance requires leave_elm.balance.view. Give that client "leave_elm.balance.view".
+4. Any test that applies first and then approves/withdraws/cancels must read the new id from the 201 response: app_id = response.json()["id"].
+
+Keep all 14 test functions and their intent. Change nothing in any other file.

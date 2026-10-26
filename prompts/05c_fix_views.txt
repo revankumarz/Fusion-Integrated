@@ -1,0 +1,10 @@
+Step 5c. modules/elm/api/views.py still has two problems. Fix only these and output the complete file:
+
+1. LeaveBalanceSerializer is used in MyBalanceView but is NOT imported. Change the serializers import line to:
+   from modules.elm.api.serializers import ApplyInputSerializer, DecisionInputSerializer, LeaveApplicationSerializer, LeaveBalanceSerializer, LeaveTypeSerializer
+   Also delete the line "from rest_framework.permissions import IsAuthenticated" (it is unused).
+
+2. In class MyApplicationsView, delete the permission_classes line and put this method in its place:
+    def get_permissions(self):
+        code = "leave_elm.application.apply" if self.request.method == "POST" else "leave_elm.application.view"
+        return [HasPermission(code)()]

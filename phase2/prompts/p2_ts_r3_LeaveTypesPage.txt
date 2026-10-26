@@ -1,0 +1,21 @@
+﻿Phase 2 frontend fix, round 3. `npx tsc --noEmit` reports these errors in client/src/modules/elm/pages/LeaveTypesPage.tsx :
+
+src/modules/elm/pages/LeaveTypesPage.tsx(1,87): error TS6133: 'Textarea' is declared but its value is never read.
+src/modules/elm/pages/LeaveTypesPage.tsx(11,17): error TS6133: 'isPending' is declared but its value is never read.
+src/modules/elm/pages/LeaveTypesPage.tsx(15,27): error TS2304: Cannot find name 'useState'.
+src/modules/elm/pages/LeaveTypesPage.tsx(16,27): error TS2304: Cannot find name 'useState'.
+src/modules/elm/pages/LeaveTypesPage.tsx(17,33): error TS2304: Cannot find name 'useState'.
+src/modules/elm/pages/LeaveTypesPage.tsx(18,39): error TS2304: Cannot find name 'useState'.
+src/modules/elm/pages/LeaveTypesPage.tsx(19,31): error TS2304: Cannot find name 'useState'.
+src/modules/elm/pages/LeaveTypesPage.tsx(20,27): error TS2304: Cannot find name 'useState'.
+src/modules/elm/pages/LeaveTypesPage.tsx(21,35): error TS2304: Cannot find name 'useState'.
+src/modules/elm/pages/LeaveTypesPage.tsx(32,12): error TS2741: Property 'rowKey' is missing in type '{ rows: NoInfer<LeaveType[]>; columns: { key: string; header: string; }[]; empty: { title: string; }; }' but required in type 'Props<LeaveType>'.
+
+Fix every one of them and output the complete file client/src/modules/elm/pages/LeaveTypesPage.tsx .
+- Import every Mantine component you use from "@mantine/core" and React hooks (useState) from "react"; remove imports that are never used.
+- Types from ../api must use `import type { ... } from "../api";` (verbatimModuleSyntax).
+- The api module is "../api" (client/src/modules/elm/api.ts), never "../../../api".
+- Every DataTable needs rowKey={(r) => r.id} and typed render params.
+- Call mutations with exactly the variable type the hook in api.ts declares.
+- Remove leftover state or elements copied from the placement module (history drawer, ActionIcon history button).
+Keep the page's behaviour otherwise unchanged.

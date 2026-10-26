@@ -1,0 +1,17 @@
+Step 7 (Leave Admin features). The permission leave_elm.policy.manage is granted to "Leave Admin" but nothing checks it, so `make permissions` fails. Add the admin features. Output the three complete files.
+
+1. NEW file modules/elm/services/policy.py :
+   - Module docstring: """Leave Admin maintenance. BR-EL-037: maintenance is not sanctioning; nothing here approves leave."""
+   - Imports: django.db.transaction, core.api.exceptions (ConflictError, NotFoundError), modules.elm.models (LeaveBalance, LeaveType), and `require` from modules.elm.services.leave.
+   - def create_leave_type(actor, code, name, max_days_per_year, requires_document=False): require(actor, "leave_elm.policy.manage"); if LeaveType with that code exists raise ConflictError("A leave type with this code already exists.", code="duplicate_code"); create and return it.
+   - def allot_balance(actor, employee_id, leave_type_id, year, allotted): require(actor, "leave_elm.policy.manage"); inside transaction.atomic(): load the LeaveType or raise NotFoundError("Leave type not found.", code="not_found"); balance, _ = LeaveBalance.objects.select_for_update().get_or_create(employee_id=employee_id, leave_type=leave_type, year=year, defaults={"allotted": allotted, "used": 0}); if allotted < balance.used raise ConflictError("Allotment cannot be below days already used.", code="below_used"); set balance.allotted = allotted, save, return it.
+
+2. modules/elm/api/views.py : keep every existing class exactly as it is. Add at the end:
+   - LeaveTypeCreateInputSerializer and AllotInputSerializer are imported from modules.elm.api.serializers; import create_leave_type and allot_balance from modules.elm.services.policy.
+   - class AdminLeaveTypeView(APIView): permission_classes = [HasPermission("leave_elm.policy.manage")]; POST validates LeaveTypeCreateInputSerializer, calls create_leave_type(request.user, **serializer.validated_data), returns LeaveTypeSerializer data with status 201.
+   - class AdminAllotBalanceView(APIView): permission_classes = [HasPermission("leave_elm.policy.manage")]; POST validates AllotInputSerializer, calls allot_balance(request.user, **serializer.validated_data), returns LeaveBalanceSerializer data.
+   Add @extend_schema(request=..., responses=...) to both like the other views.
+
+3. modules/elm/api/serializers.py : keep everything. Add at the end:
+   - LeaveTypeCreateInputSerializer(serializers.Serializer): code CharField(max_length=16), name CharField(max_length=128), max_days_per_year IntegerField(min_value=0), requires_document BooleanField(required=False, default=False).
+   - AllotInputSerializer(serializers.Serializer): employee_id IntegerField(), leave_type_id IntegerField(), year IntegerField(min_value=2000), allotted IntegerField(min_value=0).

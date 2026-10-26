@@ -1,0 +1,16 @@
+Phase 2 frontend fix. client/src/modules/elm/api.ts has these problems. Fix them and output the complete file.
+
+1. WRONG URLS: `http` already has baseURL "/api/v1", so every path must start with "/elm/..." (e.g. "/elm/types", "/elm/applications/${id}/decide"). Currently they start with "/api/v1/elm/..." which requests /api/v1/api/v1/elm/... and returns 404.
+2. TypeScript errors from `npx tsc --noEmit`:
+   api.ts(39,25): TS2749 'useQueryClient' refers to a value, but is being used as a type here.
+   api.ts(74,66) and 5 more: TS2339 Property 'queryClient' does not exist on type '{}'.
+   api.ts(74,17) and more: TS6133 'data' / 'variables' is declared but its value is never read.
+   Fix: in EVERY mutation hook do
+       const qc = useQueryClient();
+       return useMutation({
+         mutationFn: async (body: <BodyType>) => (await http.post<T>("/elm/...", body)).data,
+         onSuccess: () => qc.invalidateQueries({ queryKey: [KEY] }),
+       });
+   Give every mutationFn parameter an explicit type (no implicit any). Delete the broken invalidate helper.
+3. useWithdraw and useCancelLeave take a plain number id: mutationFn: async (id: number) => ...; useDecide takes { id: number; approve: boolean; remarks?: string }.
+Keep the three interfaces and all exported hook names unchanged.

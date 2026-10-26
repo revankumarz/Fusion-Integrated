@@ -1,0 +1,14 @@
+Phase 2, frontend step 2. Create two React pages for the ELM module. Follow the style of specs/fe_page_example.tsx exactly (Mantine components, PageHeader, DataTable, ErrorState, StatusBadge, notifications, errorMessage). Use ONLY the hooks and types exported from client/src/modules/elm/api.ts. Imports from the shared UI are "../../../ui/components/..." and "../../../lib/http". Each file has `export default function <Name>()`. Output both files complete.
+
+1. client/src/modules/elm/pages/ApplyLeavePage.tsx  (UC-001 Apply for Leave)
+   - Container size="md", PageHeader title "Apply for Leave" subtitle "Submit a new leave application".
+   - Card with a form (useState for fields): Select "Leave type" (data from useLeaveTypes(): value String(t.id), label `${t.name} (${t.code})`), TextInput type="date" "From", TextInput type="date" "To", Textarea "Reason" (required).
+   - Show the inclusive day count under the dates when both are set: Math.round((to - from) / 86400000) + 1.
+   - Button "Submit application" calls useApplyLeave().mutate({ leave_type: Number(type), start_date, end_date, reason }); onSuccess: green notification "Submitted" and reset the form; onError: red notification with errorMessage(e).
+   - Disable the button while isPending or when a field is empty.
+
+2. client/src/modules/elm/pages/MyLeavePage.tsx  (UC-012 history, UC-007 withdraw, UC-008 cancel)
+   - Container size="xl", PageHeader title "My Leave Applications".
+   - DataTable<LeaveApplication> rows from useMyApplications(), columns: Leave type (look up the name from useLeaveTypes() by id), From, To, Days, Status (<StatusBadge status={r.status.toLowerCase()} />), Remarks, actions.
+   - Actions: if status === "SUBMITTED" a "Withdraw" button (useWithdraw); if status === "APPROVED" and start_date is after today a "Cancel" button (useCancelLeave). Both show notifications on success/error like the example.
+   - empty: { title: "No leave applications yet", description: "Applications you submit will appear here." }

@@ -1,0 +1,38 @@
+﻿src/modules/elm/pages/ApplyLeavePage.tsx(44,38): error TS18047: 'e' is possibly 'null'.
+src/modules/elm/pages/ApplyLeavePage.tsx(44,40): error TS2339: Property 'target' does not exist on type 'string'.
+src/modules/elm/pages/LeaveApprovalsPage.tsx(1,42): error TS6133: 'Stack' is declared but its value is never read.
+src/modules/elm/pages/LeaveApprovalsPage.tsx(1,49): error TS6133: 'Text' is declared but its value is never read.
+src/modules/elm/pages/LeaveApprovalsPage.tsx(8,33): error TS6196: 'LeaveType' is declared but never used.
+src/modules/elm/pages/LeaveBalancePage.tsx(1,21): error TS2305: Module '"@mantine/core"' has no exported member 'DataTable'.
+src/modules/elm/pages/LeaveBalancePage.tsx(1,32): error TS2305: Module '"@mantine/core"' has no exported member 'ErrorState'.
+src/modules/elm/pages/LeaveBalancePage.tsx(1,44): error TS2305: Module '"@mantine/core"' has no exported member 'PageHeader'.
+src/modules/elm/pages/LeaveBalancePage.tsx(2,1): error TS6133: 'notifications' is declared but its value is never read.
+src/modules/elm/pages/LeaveBalancePage.tsx(3,1): error TS6133: 'errorMessage' is declared but its value is never read.
+src/modules/elm/pages/LeaveBalancePage.tsx(4,45): error TS2307: Cannot find module '../../../api' or its corresponding type declarations.
+src/modules/elm/pages/LeaveBalancePage.tsx(5,15): error TS6196: 'LeaveType' is declared but never used.
+src/modules/elm/pages/LeaveBalancePage.tsx(5,46): error TS2307: Cannot find module '../../../api' or its corresponding type declarations.
+src/modules/elm/pages/LeaveBalancePage.tsx(16,94): error TS7006: Parameter 't' implicitly has an 'any' type.
+src/modules/elm/pages/LeaveBalancePage.tsx(29,17): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/modules/elm/pages/LeaveTypesPage.tsx(12,17): error TS6133: 'isPending' is declared but its value is never read.
+src/modules/elm/pages/LeaveTypesPage.tsx(49,100): error TS2345: Argument of type 'string | number' is not assignable to parameter of type 'SetStateAction<number>'.
+  Type 'string' is not assignable to type 'SetStateAction<number>'.
+src/modules/elm/pages/LeaveTypesPage.tsx(71,100): error TS2345: Argument of type 'string | number' is not assignable to parameter of type 'SetStateAction<number>'.
+  Type 'string' is not assignable to type 'SetStateAction<number>'.
+src/modules/elm/pages/LeaveTypesPage.tsx(74,15): error TS2322: Type 'number | null' is not assignable to type 'string | null | undefined'.
+  Type 'number' is not assignable to type 'string'.
+src/modules/elm/pages/LeaveTypesPage.tsx(76,15): error TS2322: Type '{ value: number; label: string; }[]' is not assignable to type 'ComboboxData | undefined'.
+  Type '{ value: number; label: string; }[]' is not assignable to type '(string | ComboboxItem | ComboboxItemGroup<string | ComboboxItem>)[]'.
+    Type '{ value: number; label: string; }' is not assignable to type 'string | ComboboxItem | ComboboxItemGroup<string | ComboboxItem>'.
+      Type '{ value: number; label: string; }' is not assignable to type 'ComboboxItem'.
+        Types of property 'value' are incompatible.
+          Type 'number' is not assignable to type 'string'.
+src/modules/elm/pages/LeaveTypesPage.tsx(78,81): error TS2345: Argument of type 'string | number' is not assignable to parameter of type 'SetStateAction<number>'.
+  Type 'string' is not assignable to type 'SetStateAction<number>'.
+src/modules/elm/pages/LeaveTypesPage.tsx(79,98): error TS2345: Argument of type 'string | number' is not assignable to parameter of type 'SetStateAction<number>'.
+  Type 'string' is not assignable to type 'SetStateAction<number>'.
+src/modules/elm/pages/LeaveTypesPage.tsx(82,68): error TS2322: Type 'number | null' is not assignable to type 'number'.
+  Type 'null' is not assignable to type 'number'.
+src/modules/elm/pages/MyLeavePage.tsx(1,1): error TS6133: 'useState' is declared but its value is never read.
+src/modules/elm/pages/MyLeavePage.tsx(2,42): error TS6133: 'Stack' is declared but its value is never read.
+src/modules/elm/pages/MyLeavePage.tsx(2,49): error TS6133: 'Text' is declared but its value is never read.
+src/modules/elm/pages/MyLeavePage.tsx(15,40): error TS6133: 'typesPending' is declared but its value is never read.

@@ -1,0 +1,14 @@
+﻿Phase 2 frontend fix, round 2. `npx tsc --noEmit` reports these errors in client/src/modules/elm/pages/LeaveApprovalsPage.tsx :
+
+src/modules/elm/pages/LeaveApprovalsPage.tsx(1,42): error TS6133: 'Stack' is declared but its value is never read.
+src/modules/elm/pages/LeaveApprovalsPage.tsx(1,49): error TS6133: 'Text' is declared but its value is never read.
+src/modules/elm/pages/LeaveApprovalsPage.tsx(8,33): error TS6196: 'LeaveType' is declared but never used.
+
+Fix every one of them and output the complete file client/src/modules/elm/pages/LeaveApprovalsPage.tsx .
+- Import every Mantine component you use from "@mantine/core" and React hooks (useState) from "react"; remove imports that are never used.
+- Types from ../api must use `import type { ... } from "../api";` (verbatimModuleSyntax).
+- The api module is "../api" (client/src/modules/elm/api.ts), never "../../../api".
+- Every DataTable needs rowKey={(r) => r.id} and typed render params.
+- Call mutations with exactly the variable type the hook in api.ts declares.
+- Remove leftover state or elements copied from the placement module (history drawer, ActionIcon history button).
+Keep the page's behaviour otherwise unchanged.

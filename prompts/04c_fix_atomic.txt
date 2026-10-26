@@ -1,0 +1,8 @@
+Step 4c (one bug). In modules/elm/services/leave.py, select_for_update() is called OUTSIDE transaction.atomic(). Django raises TransactionManagementError for that, so decide, withdraw, cancel_approved and apply all crash.
+
+Fix: in each of apply, decide, withdraw and cancel_approved, the line `with transaction.atomic():` must come directly after the require(...) line, and EVERYTHING else in the function (the loads, the checks, the saves, the return) must be indented inside it. There must be no other transaction.atomic() in those functions.
+
+Also add this as the first line of the file:
+"""Leave application lifecycle. BR-EL-034: there is deliberately no edit function."""
+
+Change nothing else. Output the complete file.

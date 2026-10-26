@@ -1,0 +1,8 @@
+Step 2b (fix the previous output). Two files.
+
+1. modules/elm/registry.py : the module docstring is in the wrong place and is outdated. Move it to be the FIRST line of the file and change it to:
+   """What the server tells the shell about the Employee Leave Management module (ADR-0010)."""
+   Remove the old string "Permissions this module recognises. No nav..." entirely. Keep MODULE, NAV_ITEMS, PERMISSIONS, SYSTEM_PERMISSIONS and ROLE_GRANTS exactly as they are. Change the comment above ROLE_GRANTS to "#: Keyed by the designation name; each key is a role."
+
+2. config/urls.py : keep every existing line exactly as given (including the docstring characters). Add one line after the placement line, with no comment:
+   path("api/v1/elm/", include("modules.elm.api.urls")),

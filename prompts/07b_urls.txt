@@ -1,0 +1,4 @@
+Step 7b. In modules/elm/api/urls.py keep every existing line. Add AdminLeaveTypeView and AdminAllotBalanceView to the import from modules.elm.api.views, and add two paths at the end of urlpatterns:
+    path("admin/types", AdminLeaveTypeView.as_view(), name="elm-admin-types"),
+    path("admin/balances", AdminAllotBalanceView.as_view(), name="elm-admin-balances"),
+Output the complete file.

@@ -1,0 +1,14 @@
+Phase 2 frontend. Your previous LeaveTypesPage.tsx was a copy of the placement "My Applications" page. Write it from scratch using ONLY specs/fe_ui_notes.md and client/src/modules/elm/api.ts. Output the complete file client/src/modules/elm/pages/LeaveTypesPage.tsx.
+
+LeaveTypesPage (UC-014 minimal, Leave Admin):
+- `export default function LeaveTypesPage()`.
+- Hooks: useLeaveTypes(), useCreateLeaveType(), useAllotBalance().
+- State with useState: code (string), name (string), maxDays (number | string, default 0); employeeId (number | string, default ""), typeId (string | null), year (number | string, default new Date().getFullYear()), allotted (number | string, default 0).
+- If the types query has an error: return <Container size="xl"><ErrorState error={error} /></Container>.
+- Container size="xl"; PageHeader title "Leave Types & Allotment" subtitle "Configure leave categories and allot balances".
+- Stack gap="lg" containing three Cards (padding="lg"):
+  1. DataTable<LeaveType>: rows data ?? [], columns Code ("code"), Name ("name"), Max days/year ("max_days_per_year"); empty { title: "No leave types yet" }.
+  2. Text fw={600} "New leave type"; Group with TextInput label "Code", TextInput label "Name", NumberInput label "Max days per year"; Button "Create" -> create.mutate({ code, name, max_days_per_year: Number(maxDays) }, notifications on success (green "Leave type created") and error (red, errorMessage(e))), disabled when code or name is empty.
+  3. Text fw={600} "Allot balance"; Group with NumberInput "Employee id", Select "Leave type" (data: types (data ?? []).map(t => ({ value: String(t.id), label: `${t.name} (${t.code})` }))), NumberInput "Year", NumberInput "Allotted days"; Button "Allot" -> allot.mutate({ employee_id: Number(employeeId), leave_type_id: Number(typeId), year: Number(year), allotted: Number(allotted) }, notifications), disabled when employeeId or typeId is empty.
+- NumberInput onChange gives (value: number | string); Select onChange gives (value: string | null).
+Do not import anything that is not used.

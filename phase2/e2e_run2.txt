@@ -1,0 +1,24 @@
+﻿employee user_id: 5318 | nav modules: [None]
+PASS employee sees Leave Management in sidebar
+PASS admin creates leave type (201)
+PASS admin allots balance (200)
+PASS employee cannot create leave type (403)
+PASS employee applies 3 days (201)
+PASS BR-EL-011 inclusive day count = 3
+PASS BR-EL-012 overlapping application rejected (409)
+PASS insufficient balance rejected (409)
+PASS end before start rejected (400)
+PASS employee lists own applications
+PASS employee cannot see approval queue (403)
+PASS approver sees pending application
+PASS approver approves (200, APPROVED)
+PASS deciding twice rejected (409)
+PASS unknown application -> 404
+PASS balance endpoint works (200)
+PASS balance used = 3 after approval
+PASS employee withdraws pending (200, CANCELLED)
+PASS employee cancels approved future leave (200)
+PASS balance restored to used = 0 after cancel
+PASS approver cannot approve own application (403)
+
+21/21 checks passed

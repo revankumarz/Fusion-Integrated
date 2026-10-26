@@ -1,0 +1,62 @@
+﻿    "build": "tsc -b && vite build",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+src/modules/elm/api.ts(1,33): error TS6133: 'useQueryClient' is declared but its value is never read.
+src/modules/elm/api.ts(39,25): error TS2749: 'useQueryClient' refers to a value, but is being used as a type here. Did you mean 'typeof useQueryClient'?
+src/modules/elm/api.ts(74,17): error TS6133: 'data' is declared but its value is never read.
+src/modules/elm/api.ts(74,23): error TS6133: 'variables' is declared but its value is never read.
+src/modules/elm/api.ts(74,66): error TS2339: Property 'queryClient' does not exist on type '{}'.
+src/modules/elm/api.ts(80,17): error TS6133: 'data' is declared but its value is never read.
+src/modules/elm/api.ts(80,23): error TS6133: 'variables' is declared but its value is never read.
+src/modules/elm/api.ts(80,66): error TS2339: Property 'queryClient' does not exist on type '{}'.
+src/modules/elm/api.ts(86,17): error TS6133: 'data' is declared but its value is never read.
+src/modules/elm/api.ts(86,23): error TS6133: 'variables' is declared but its value is never read.
+src/modules/elm/api.ts(86,66): error TS2339: Property 'queryClient' does not exist on type '{}'.
+src/modules/elm/api.ts(92,17): error TS6133: 'data' is declared but its value is never read.
+src/modules/elm/api.ts(92,23): error TS6133: 'variables' is declared but its value is never read.
+src/modules/elm/api.ts(92,66): error TS2339: Property 'queryClient' does not exist on type '{}'.
+src/modules/elm/api.ts(98,17): error TS6133: 'data' is declared but its value is never read.
+src/modules/elm/api.ts(98,23): error TS6133: 'variables' is declared but its value is never read.
+src/modules/elm/api.ts(98,66): error TS2339: Property 'queryClient' does not exist on type '{}'.
+src/modules/elm/api.ts(104,17): error TS6133: 'data' is declared but its value is never read.
+src/modules/elm/api.ts(104,23): error TS6133: 'variables' is declared but its value is never read.
+src/modules/elm/api.ts(104,66): error TS2339: Property 'queryClient' does not exist on type '{}'.
+src/modules/elm/pages/ApplyLeavePage.tsx(3,3): error TS6133: 'ActionIcon' is declared but its value is never read.
+src/modules/elm/pages/ApplyLeavePage.tsx(3,40): error TS6133: 'Group' is declared but its value is never read.
+src/modules/elm/pages/ApplyLeavePage.tsx(6,1): error TS6133: 'FaCalendarAlt' is declared but its value is never read.
+src/modules/elm/pages/ApplyLeavePage.tsx(11,1): error TS6133: 'StatusBadge' is declared but its value is never read.
+src/modules/elm/pages/LeaveApprovalsPage.tsx(13,26): error TS2307: Cannot find module '../components/CpiBadge' or its corresponding type declarations.
+src/modules/elm/pages/LeaveApprovalsPage.tsx(14,31): error TS2307: Cannot find module '../components/HistoryDrawer' or its corresponding type declarations.
+src/modules/elm/pages/LeaveApprovalsPage.tsx(15,48): error TS2307: Cannot find module '../api/hooks' or its corresponding type declarations.
+src/modules/elm/pages/LeaveApprovalsPage.tsx(16,34): error TS2307: Cannot find module '../api/types' or its corresponding type declarations.
+src/modules/elm/pages/LeaveApprovalsPage.tsx(33,19): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/modules/elm/pages/LeaveBalancePage.tsx(13,26): error TS2307: Cannot find module '../components/CpiBadge' or its corresponding type declarations.
+src/modules/elm/pages/LeaveBalancePage.tsx(14,31): error TS2307: Cannot find module '../components/HistoryDrawer' or its corresponding type declarations.
+src/modules/elm/pages/LeaveBalancePage.tsx(15,48): error TS2307: Cannot find module '../api/hooks' or its corresponding type declarations.
+src/modules/elm/pages/LeaveBalancePage.tsx(16,34): error TS2307: Cannot find module '../api/types' or its corresponding type declarations.
+src/modules/elm/pages/LeaveBalancePage.tsx(33,19): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/modules/elm/pages/LeaveTypesPage.tsx(13,26): error TS2307: Cannot find module '../components/CpiBadge' or its corresponding type declarations.
+src/modules/elm/pages/LeaveTypesPage.tsx(14,31): error TS2307: Cannot find module '../components/HistoryDrawer' or its corresponding type declarations.
+src/modules/elm/pages/LeaveTypesPage.tsx(15,48): error TS2307: Cannot find module '../api/hooks' or its corresponding type declarations.
+src/modules/elm/pages/LeaveTypesPage.tsx(16,34): error TS2307: Cannot find module '../api/types' or its corresponding type declarations.
+src/modules/elm/pages/LeaveTypesPage.tsx(33,19): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/modules/elm/pages/MyLeavePage.tsx(3,47): error TS6133: 'Stack' is declared but its value is never read.
+src/modules/elm/pages/MyLeavePage.tsx(3,54): error TS6133: 'Text' is declared but its value is never read.
+src/modules/elm/pages/MyLeavePage.tsx(14,40): error TS6133: 'typesPending' is declared but its value is never read.
+src/modules/elm/pages/MyLeavePage.tsx(20,43): error TS2304: Cannot find name 'ErrorState'.
+src/modules/elm/pages/MyLeavePage.tsx(22,32): error TS2304: Cannot find name 'LeaveApplication'.
+src/modules/elm/pages/MyLeavePage.tsx(37,30): error TS2304: Cannot find name 'LeaveApplication'.
+src/modules/elm/pages/MyLeavePage.tsx(56,10): error TS2304: Cannot find name 'DataTable'.
+src/modules/elm/pages/MyLeavePage.tsx(56,20): error TS2304: Cannot find name 'LeaveApplication'.
+src/modules/elm/pages/MyLeavePage.tsx(57,32): error TS2339: Property 'results' does not exist on type 'NoInfer<LeaveApplication[]>'.
+src/modules/elm/pages/MyLeavePage.tsx(57,50): error TS2304: Cannot find name 'LeaveApplication'.
+src/modules/elm/pages/MyLeavePage.tsx(59,20): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/modules/elm/pages/MyLeavePage.tsx(64,24): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/modules/elm/pages/MyLeavePage.tsx(66,59): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/modules/elm/pages/MyLeavePage.tsx(67,55): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/modules/elm/pages/MyLeavePage.tsx(68,53): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/modules/elm/pages/MyLeavePage.tsx(69,57): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/modules/elm/pages/MyLeavePage.tsx(70,59): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/modules/elm/pages/MyLeavePage.tsx(73,24): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/modules/elm/pages/MyLeavePage.tsx(111,8): error TS2304: Cannot find name 'HistoryDrawer'.
+TOTAL errors: 58  (elm: 58)

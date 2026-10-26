@@ -1,0 +1,11 @@
+Phase 2 frontend. Your previous LeaveApprovalsPage.tsx was a copy of the placement "My Applications" page. Write it from scratch using ONLY specs/fe_ui_notes.md and client/src/modules/elm/api.ts. Output the complete file client/src/modules/elm/pages/LeaveApprovalsPage.tsx.
+
+LeaveApprovalsPage (UC-005 sanctioning decision):
+- `export default function LeaveApprovalsPage()`.
+- `const { data, isPending, error } = usePendingApprovals();`, `const types = useLeaveTypes();`, `const decide = useDecide();`
+- If error: return <Container size="xl"><ErrorState error={error} /></Container>.
+- function act(r: LeaveApplication, approve: boolean): decide.mutate({ id: r.id, approve, remarks: "" }, { onSuccess: () => notifications.show({ color: approve ? "green" : "gray", title: approve ? "Approved" : "Rejected", message: `Application #${r.id}` }), onError: (e: unknown) => notifications.show({ color: "red", title: "Could not save decision", message: errorMessage(e) }) }).
+- Container size="xl"; PageHeader title "Leave Approvals" subtitle "Pending applications waiting for your decision".
+- Card padding="lg" with DataTable<LeaveApplication>: rows data ?? [], loading isPending, rowKey r => r.id, columns: Employee (key "employee_id"), Leave type (name from types.data by id), From ("start_date"), To ("end_date"), Days ("days"), Reason ("reason"), and an actions column (header "", align "right") rendering <Group justify="flex-end" gap="xs"> with Button size="xs" color="green" "Approve" and Button size="xs" color="red" variant="light" "Reject", both loading={decide.isPending}.
+- empty: { title: "Nothing to review", description: "Pending leave applications will appear here." }
+Do not import anything that is not used.

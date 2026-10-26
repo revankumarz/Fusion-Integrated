@@ -1,0 +1,38 @@
+src/modules/elm/pages/ApplyLeavePage.tsx(44,38): error TS18047: 'e' is possibly 'null'.
+src/modules/elm/pages/ApplyLeavePage.tsx(44,40): error TS2339: Property 'target' does not exist on type 'string'.
+src/modules/elm/pages/LeaveApprovalsPage.tsx(1,42): error TS6133: 'Stack' is declared but its value is never read.
+src/modules/elm/pages/LeaveApprovalsPage.tsx(1,49): error TS6133: 'Text' is declared but its value is never read.
+src/modules/elm/pages/LeaveApprovalsPage.tsx(8,33): error TS6196: 'LeaveType' is declared but never used.
+src/modules/elm/pages/LeaveBalancePage.tsx(1,91): error TS2307: Cannot find module '../../../api' or its corresponding type declarations.
+src/modules/elm/pages/LeaveBalancePage.tsx(2,24): error TS6133: 'LeaveType' is declared but its value is never read.
+src/modules/elm/pages/LeaveBalancePage.tsx(2,41): error TS2307: Cannot find module '../../../api' or its corresponding type declarations.
+src/modules/elm/pages/LeaveBalancePage.tsx(3,1): error TS6133: 'notifications' is declared but its value is never read.
+src/modules/elm/pages/LeaveBalancePage.tsx(4,1): error TS6133: 'errorMessage' is declared but its value is never read.
+src/modules/elm/pages/LeaveBalancePage.tsx(15,94): error TS7006: Parameter 't' implicitly has an 'any' type.
+src/modules/elm/pages/LeaveBalancePage.tsx(25,8): error TS2304: Cannot find name 'Card'.
+src/modules/elm/pages/LeaveBalancePage.tsx(29,19): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/modules/elm/pages/LeaveBalancePage.tsx(33,9): error TS2304: Cannot find name 'Card'.
+src/modules/elm/pages/LeaveTypesPage.tsx(1,87): error TS6133: 'Textarea' is declared but its value is never read.
+src/modules/elm/pages/LeaveTypesPage.tsx(11,17): error TS6133: 'isPending' is declared but its value is never read.
+src/modules/elm/pages/LeaveTypesPage.tsx(15,27): error TS2304: Cannot find name 'useState'.
+src/modules/elm/pages/LeaveTypesPage.tsx(16,27): error TS2304: Cannot find name 'useState'.
+src/modules/elm/pages/LeaveTypesPage.tsx(17,33): error TS2304: Cannot find name 'useState'.
+src/modules/elm/pages/LeaveTypesPage.tsx(18,39): error TS2304: Cannot find name 'useState'.
+src/modules/elm/pages/LeaveTypesPage.tsx(19,31): error TS2304: Cannot find name 'useState'.
+src/modules/elm/pages/LeaveTypesPage.tsx(20,27): error TS2304: Cannot find name 'useState'.
+src/modules/elm/pages/LeaveTypesPage.tsx(21,35): error TS2304: Cannot find name 'useState'.
+src/modules/elm/pages/LeaveTypesPage.tsx(32,12): error TS2741: Property 'rowKey' is missing in type '{ rows: NoInfer<LeaveType[]>; columns: { key: string; header: string; }[]; empty: { title: string; }; }' but required in type 'Props<LeaveType>'.
+src/modules/elm/pages/MyLeavePage.tsx(3,35): error TS6133: 'Stack' is declared but its value is never read.
+src/modules/elm/pages/MyLeavePage.tsx(3,42): error TS6133: 'Text' is declared but its value is never read.
+src/modules/elm/pages/MyLeavePage.tsx(14,10): error TS1484: 'LeaveApplication' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/modules/elm/pages/MyLeavePage.tsx(17,40): error TS6133: 'typesPending' is declared but its value is never read.
+src/modules/elm/pages/MyLeavePage.tsx(21,10): error TS6133: 'historyFor' is declared but its value is never read.
+src/modules/elm/pages/MyLeavePage.tsx(27,7): error TS2345: Argument of type 'number' is not assignable to parameter of type '{ id: number; }'.
+src/modules/elm/pages/MyLeavePage.tsx(42,7): error TS2345: Argument of type 'number' is not assignable to parameter of type '{ id: number; }'.
+src/modules/elm/pages/MyLeavePage.tsx(78,20): error TS2304: Cannot find name 'ActionIcon'.
+src/modules/elm/pages/MyLeavePage.tsx(83,21): error TS2304: Cannot find name 'ActionIcon'.
+npm notice
+npm notice New major version of npm available! 10.8.2 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice

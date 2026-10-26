@@ -1,0 +1,11 @@
+Step 7c. Two small fixes. Output both complete files, changing nothing else.
+
+1. modules/elm/api/views.py : MyBalanceView uses timezone and BadRequestError, but their imports were lost. Add these two lines to the imports at the top:
+   from django.utils import timezone
+   from core.api.exceptions import BadRequestError
+
+2. modules/elm/services/policy.py : in allot_balance, `LeaveType.objects.select_for_update().get(id=leave_type_id)` raises DoesNotExist (a 500 error) when the id is wrong. Wrap it:
+        try:
+            leave_type = LeaveType.objects.select_for_update().get(id=leave_type_id)
+        except LeaveType.DoesNotExist:
+            raise NotFoundError("Leave type not found.", code="not_found")

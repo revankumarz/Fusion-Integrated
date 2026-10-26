@@ -1,0 +1,24 @@
+﻿employee user_id: None | nav modules: []
+FAIL employee sees Leave Management in sidebar  -> None
+FAIL admin creates leave type (201)  -> {"error":{"code":"permission_denied","message":"You do not have permission to perform this action.","details":[],"request_id":"d8deba8b-03aa-4e80-8e38-8b90fdac4ecf"}}
+FAIL admin allots balance (200)  -> {"error":{"code":"permission_denied","message":"You do not have permission to perform this action.","details":[],"request_id":"02e28c85-c228-42b6-84ce-0cb6e085d329"}}
+PASS employee cannot create leave type (403)
+FAIL employee applies 3 days (201)  -> {"error":{"code":"permission_denied","message":"You do not have permission to perform this action.","details":[],"request_id":"3b1a9c6a-8f06-4543-8fed-6fd358561f89"}}
+FAIL BR-EL-011 inclusive day count = 3  -> {'error': {'code': 'permission_denied', 'message': 'You do not have permission to perform this action.', 'details': [], 'request_id': '3b1a9c6a-8f06-4543-8fed-6fd358561f89'}}
+FAIL BR-EL-012 overlapping application rejected (409)  -> {"error":{"code":"permission_denied","message":"You do not have permission to perform this action.","details":[],"request_id":"fb617971-9192-4a00-b09e-805586a2d6ec"}}
+FAIL insufficient balance rejected (409)  -> {"error":{"code":"permission_denied","message":"You do not have permission to perform this action.","details":[],"request_id":"b0dcae4a-fd38-42f2-bd34-642bae00651e"}}
+FAIL end before start rejected (400)  -> {"error":{"code":"permission_denied","message":"You do not have permission to perform this action.","details":[],"request_id":"f33aa7f3-ae44-4e32-a15f-776402a9e75d"}}
+FAIL employee lists own applications  -> {"error":{"code":"permission_denied","message":"You do not have permission to perform this action.","details":[],"request_id":"47f78c1d-3ffd-4ea0-b141-ed3750d83f10"}}
+PASS employee cannot see approval queue (403)
+FAIL approver sees pending application  -> {"error":{"code":"permission_denied","message":"You do not have permission to perform this action.","details":[],"request_id":"4e5c74b4-3499-4301-895b-a533666a7f20"}}
+wsl : Traceback (most recent call last):
+At line:1 char:302
++ ... tch {} } }; wsl -d Ubuntu-24.04 -- bash -lc "cd ~/Documents/Fusion/Fu ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Traceback (most recent call last)::String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  File "/mnt/c/Users/Revan/Desktop/a/logs/phase2/e2e_smoke.py", line 80, in <module>
+    r = appr.post(f"applications/{app1['id']}/decide", {"approve": True, "remarks": "ok"})
+                                  ~~~~^^^^^^
+KeyError: 'id'

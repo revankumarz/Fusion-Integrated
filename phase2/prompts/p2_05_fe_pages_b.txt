@@ -1,0 +1,19 @@
+Phase 2, frontend step 3. Create three React pages for the ELM module. Follow the style of specs/fe_page_example.tsx exactly (Mantine components, PageHeader, DataTable, ErrorState, notifications, errorMessage). Use ONLY the hooks and types exported from client/src/modules/elm/api.ts. Shared imports are "../../../ui/components/..." and "../../../lib/http". Each file has `export default function <Name>()`. Output all three files complete.
+
+1. client/src/modules/elm/pages/LeaveBalancePage.tsx  (UC-012)
+   - PageHeader "Leave Balance", subtitle "Allotted, used and available days this year".
+   - DataTable<LeaveBalance> from useMyBalance(): columns Leave type (name looked up from useLeaveTypes()), Year, Allotted, Used, Available.
+   - empty: { title: "No leave balance yet", description: "Your leave administrator has not allotted leave for this year." }
+
+2. client/src/modules/elm/pages/LeaveApprovalsPage.tsx  (UC-005)
+   - PageHeader "Leave Approvals", subtitle "Pending applications waiting for your decision".
+   - DataTable<LeaveApplication> from usePendingApprovals(): columns Employee (employee_id), Leave type, From, To, Days, Reason, actions.
+   - Actions: a Textarea-free approach: "Approve" (green) and "Reject" (red) buttons calling useDecide().mutate({ id, approve: true/false, remarks: "" }); notifications on success/error.
+   - empty: { title: "Nothing to review", description: "Pending leave applications will appear here." }
+
+3. client/src/modules/elm/pages/LeaveTypesPage.tsx  (UC-014 minimal, Leave Admin)
+   - PageHeader "Leave Types & Allotment".
+   - Card 1: DataTable<LeaveType> from useLeaveTypes(): Code, Name, Max days/year.
+   - Card 2 "New leave type": TextInput Code, TextInput Name, NumberInput Max days per year; button "Create" -> useCreateLeaveType().
+   - Card 3 "Allot balance": NumberInput Employee id, Select Leave type (from useLeaveTypes), NumberInput Year (default current year), NumberInput Allotted days; button "Allot" -> useAllotBalance() with { employee_id, leave_type_id, year, allotted }.
+   - Notifications on success/error for both forms.

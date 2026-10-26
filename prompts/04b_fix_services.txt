@@ -1,0 +1,16 @@
+Step 4b (fix bugs in modules/elm/services/leave.py). Output the complete corrected file. Keep the same functions and behaviour except for these fixes:
+
+1. withdraw and cancel_approved call require() with "leave_elm.application.withdraw" and "leave_elm.application.cancel". Those permissions do not exist in modules/elm/registry.py, so nobody could ever withdraw or cancel. Use "leave_elm.application.apply" in both.
+2. .get() raises Model.DoesNotExist which becomes a 500 error. Add a helper:
+       def _load_for_update(application_id):
+           try:
+               return LeaveApplication.objects.select_for_update().get(id=application_id)
+           except LeaveApplication.DoesNotExist:
+               raise NotFoundError("Leave application not found.", code="not_found")
+   Use it in decide, withdraw and cancel_approved, then check the status explicitly and raise ConflictError("Only a pending application can be decided.", code="not_pending") (decide), ConflictError("Only a pending application can be withdrawn.", code="not_pending") (withdraw), ConflictError("Only approved leave that has not started can be cancelled.", code="not_cancellable") (cancel_approved: status must be APPROVED and start_date > timezone.localdate()).
+   In apply, a missing or inactive leave type must raise NotFoundError("Leave type not found.", code="not_found") instead of DoesNotExist.
+3. Race conditions: in apply, put the overlap check, the balance check and the create ALL inside one transaction.atomic() block, and load the balance with select_for_update(). Add a parameter for_update=False to get_balance; when True use LeaveBalance.objects.select_for_update(). In decide and cancel_approved use get_balance(..., for_update=True). Remove the nested inner transaction.atomic() blocks (one outer block is enough).
+4. Give every ConflictError a human message, e.g. ConflictError("These dates overlap another leave application.", code="overlap") and ConflictError("Not enough leave balance.", code="insufficient_balance").
+5. Remove the unused "from datetime import datetime" import.
+6. Docstrings: count_days BR-EL-011, apply BR-EL-011/BR-EL-012, decide BR-EL-036, withdraw BR-EL-022, cancel_approved BR-EL-023. Add a module docstring: """Leave application lifecycle. BR-EL-034: there is deliberately no edit function."""
+7. withdraw and cancel_approved must return the application.

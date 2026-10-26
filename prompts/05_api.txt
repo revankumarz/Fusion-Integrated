@@ -1,0 +1,25 @@
+Step 5 (REST API). Create four files in modules/elm/api/, following the style of modules/directory/api (views use APIView, permission_classes = [HasPermission("...")] from fusion_auth.permissions, extend_schema from drf_spectacular). The logged-in Principal is request.user (it has .user_id). Views must only call functions in modules/elm/services/leave.py for writes; never change model rows directly in a view. Services raise core.api.exceptions errors; do not catch them, the platform turns them into JSON errors.
+
+1. modules/elm/api/__init__.py : empty.
+
+2. modules/elm/api/serializers.py :
+   - LeaveTypeSerializer(ModelSerializer): model LeaveType, fields id, code, name, max_days_per_year, requires_document, is_active.
+   - LeaveBalanceSerializer(ModelSerializer): fields id, leave_type, year, allotted, used, plus available = SerializerMethodField returning allotted - used.
+   - LeaveApplicationSerializer(ModelSerializer): fields id, employee_id, leave_type, start_date, end_date, days, reason, status, approver_id, remarks, decided_at, created_at; all read-only.
+   - ApplyInputSerializer(Serializer): leave_type (IntegerField), start_date (DateField), end_date (DateField), reason (CharField max_length=2000).
+   - DecisionInputSerializer(Serializer): approve (BooleanField), remarks (CharField required=False, allow_blank=True, max_length=2000).
+
+3. modules/elm/api/views.py :
+   - LeaveTypeListView GET: permission leave_elm.application.view; returns active LeaveTypes ordered by name.
+   - MyApplicationsView GET: permission leave_elm.application.view; the caller's own applications (employee_id = request.user.user_id) newest first.
+     POST: permission leave_elm.application.apply; validate ApplyInputSerializer, call services.leave.apply(request.user, ...), return 201 with LeaveApplicationSerializer.
+     Use get_permissions() to pick HasPermission by request.method.
+   - PendingApprovalsView GET: permission leave_elm.application.approve; all SUBMITTED applications except the caller's own, oldest first.
+   - DecideView POST <int:pk>: permission leave_elm.application.approve; validate DecisionInputSerializer, call services.leave.decide.
+   - WithdrawView POST <int:pk>: permission leave_elm.application.apply; call services.leave.withdraw.
+   - CancelView POST <int:pk>: permission leave_elm.application.apply; call services.leave.cancel_approved.
+   - MyBalanceView GET: permission leave_elm.balance.view; the caller's LeaveBalance rows for ?year= (default current year, from django.utils.timezone.localdate().year); a non-numeric year raises BadRequestError("year must be a number.", code="invalid_filter").
+   Every write view returns LeaveApplicationSerializer data.
+
+4. modules/elm/api/urls.py :
+   path("types", ...), path("applications", MyApplicationsView), path("applications/pending", PendingApprovalsView), path("applications/<int:pk>/decide", DecideView), path("applications/<int:pk>/withdraw", WithdrawView), path("applications/<int:pk>/cancel", CancelView), path("balance", MyBalanceView). Give each a name starting with "elm-".

@@ -1,0 +1,17 @@
+Step 4 (business logic). Create two files. Implement the ELM business rules given in specs/br_excerpt.md on top of modules/elm/models.py. Follow the style of modules/placement/services/authz.py, but do NOT import anything from modules.placement (modules must not import each other).
+
+1. modules/elm/services/__init__.py : empty file.
+
+2. modules/elm/services/leave.py :
+   - Imports: datetime, django.db.transaction, django.utils.timezone, core.api.exceptions (BadRequestError, ConflictError, NotFoundError, PermissionDeniedError), and the models from modules.elm.models.
+   - `actor` is the logged-in Principal: it has `actor.user_id` (int) and `actor.has_permission(code) -> bool`.
+   - def require(actor, code): raise PermissionDeniedError("This action needs <code>.", code="permission_denied") if actor is None or not actor.has_permission(code).
+   - ACTIVE = ("SUBMITTED", "APPROVED")
+   - def count_days(start, end): BR-EL-011 continuous-day counting, inclusive (end - start).days + 1. Raise BadRequestError("End date is before start date.", code="invalid_dates") if end < start.
+   - def get_balance(employee_id, leave_type, year): return LeaveBalance or raise NotFoundError("No leave balance for this leave type.", code="no_balance").
+   - def apply(actor, leave_type_id, start_date, end_date, reason): require "leave_elm.application.apply"; leave type must exist and be is_active; days = count_days; BR-EL-012 non-overlap: raise ConflictError(code="overlap") if the same employee has an application in ACTIVE status whose dates overlap; check balance (allotted - used >= days) else ConflictError(code="insufficient_balance"); create LeaveApplication with status "SUBMITTED". Wrap in transaction.atomic(). Return the application.
+   - def decide(actor, application_id, approve: bool, remarks=""): require "leave_elm.application.approve"; inside transaction.atomic() load the application with select_for_update(); it must be "SUBMITTED" else ConflictError(code="not_pending"); an approver cannot decide their own application (PermissionDeniedError code="self_approval"); on approve lock the LeaveBalance with select_for_update(), add days to used, status "APPROVED"; on reject status "REJECTED"; set approver_id, remarks, decided_at=timezone.now(). Return the application.
+   - def withdraw(actor, application_id): BR-EL-022. Only the applicant (employee_id == actor.user_id) can withdraw; status must be "SUBMITTED"; set status "CANCELLED".
+   - def cancel_approved(actor, application_id): BR-EL-023. Only the applicant; status must be "APPROVED" and start_date must be after today; give the days back to the balance (used -= days) and set status "CANCELLED". Use transaction.atomic() and select_for_update().
+   - BR-EL-034: there is NO function that edits a submitted application.
+   Every function has a one-line docstring naming its BR-EL id.

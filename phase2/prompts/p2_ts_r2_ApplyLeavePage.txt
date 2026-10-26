@@ -1,0 +1,16 @@
+﻿Phase 2 frontend fix, round 2. `npx tsc --noEmit` reports these errors in client/src/modules/elm/pages/ApplyLeavePage.tsx :
+
+src/modules/elm/pages/ApplyLeavePage.tsx(10,1): error TS6133: 'StatusBadge' is declared but its value is never read.
+src/modules/elm/pages/ApplyLeavePage.tsx(45,10): error TS2304: Cannot find name 'Stack'.
+src/modules/elm/pages/ApplyLeavePage.tsx(55,13): error TS2607: JSX element class does not support attributes because it does not have a 'props' property.
+src/modules/elm/pages/ApplyLeavePage.tsx(55,14): error TS2786: 'Text' cannot be used as a JSX component.
+src/modules/elm/pages/ApplyLeavePage.tsx(68,11): error TS2304: Cannot find name 'Stack'.
+
+Fix every one of them and output the complete file client/src/modules/elm/pages/ApplyLeavePage.tsx .
+- Import every Mantine component you use from "@mantine/core" and React hooks (useState) from "react"; remove imports that are never used.
+- Types from ../api must use `import type { ... } from "../api";` (verbatimModuleSyntax).
+- The api module is "../api" (client/src/modules/elm/api.ts), never "../../../api".
+- Every DataTable needs rowKey={(r) => r.id} and typed render params.
+- Call mutations with exactly the variable type the hook in api.ts declares.
+- Remove leftover state or elements copied from the placement module (history drawer, ActionIcon history button).
+Keep the page's behaviour otherwise unchanged.

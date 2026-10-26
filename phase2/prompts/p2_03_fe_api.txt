@@ -1,0 +1,29 @@
+Phase 2, frontend step 1. The ELM backend is at /api/v1/elm/ (see modules/elm/api/urls.py and modules/elm/api/serializers.py). The Fusion client is React + TypeScript + Mantine + @tanstack/react-query. Follow the pattern in specs/fe_hooks_excerpt.ts and client/src/modules/placement/routes.tsx. Create/update three files and output each complete.
+
+1. NEW client/src/modules/elm/api.ts
+   - `import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";` and `import { http } from "../../lib/http";`
+   - Types (match the serializers exactly):
+     export interface LeaveType { id: number; code: string; name: string; max_days_per_year: number; requires_document: boolean; is_active: boolean }
+     export interface LeaveBalance { id: number; leave_type: number; year: number; allotted: number; used: number; available: number }
+     export interface LeaveApplication { id: number; employee_id: number; leave_type: number; start_date: string; end_date: string; days: number; reason: string; status: string; approver_id: number | null; remarks: string; decided_at: string | null; created_at: string }
+   - const KEY = "elm"; a function invalidate(qc) that calls qc.invalidateQueries({ queryKey: [KEY] }).
+   - Queries (http.get, base URL already /api/v1 so paths start with "/elm/"):
+     useLeaveTypes() -> GET /elm/types -> LeaveType[]
+     useMyApplications() -> GET /elm/applications -> LeaveApplication[]
+     usePendingApprovals() -> GET /elm/applications/pending -> LeaveApplication[]
+     useMyBalance(year?: number) -> GET /elm/balance with params { year } -> LeaveBalance[]
+   - Mutations (http.post, each invalidates [KEY] on success):
+     useApplyLeave() body { leave_type: number; start_date: string; end_date: string; reason: string } -> POST /elm/applications
+     useDecide() vars { id: number; approve: boolean; remarks?: string } -> POST /elm/applications/{id}/decide with { approve, remarks }
+     useWithdraw() vars id: number -> POST /elm/applications/{id}/withdraw
+     useCancelLeave() vars id: number -> POST /elm/applications/{id}/cancel
+     useCreateLeaveType() body { code: string; name: string; max_days_per_year: number; requires_document?: boolean } -> POST /elm/admin/types
+     useAllotBalance() body { employee_id: number; leave_type_id: number; year: number; allotted: number } -> POST /elm/admin/balances
+     Every mutationFn returns `(await http.post<T>(...)).data`.
+
+2. NEW client/src/modules/elm/routes.tsx
+   - Same shape as client/src/modules/placement/routes.tsx: lazy() one page per route, `export const routes: RouteObject[]`.
+   - Pages (files in ./pages/): ApplyLeavePage -> "apply", MyLeavePage -> "mine", LeaveBalancePage -> "balance", LeaveApprovalsPage -> "approvals", LeaveTypesPage -> "types". Index route: <Navigate to="mine" replace />.
+
+3. client/src/app/registry.ts : keep everything, add a second entry to MODULE_REGISTRY:
+   leave_elm: { code: "leave_elm", basePath: "/leave", load: () => import("../modules/elm/routes") },

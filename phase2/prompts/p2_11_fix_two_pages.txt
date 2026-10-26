@@ -1,0 +1,13 @@
+Phase 2 frontend fix. Two pages fail `npx tsc --noEmit`. Use specs/fe_ui_notes.md and client/src/modules/elm/api.ts. Output both files complete; keep their behaviour.
+
+client/src/modules/elm/pages/MyLeavePage.tsx errors:
+  (3,47)(3,54) 'Stack' and 'Text' declared but never read -> remove from the import.
+  (14,40) 'typesPending' declared but never read -> remove it.
+  (20,43) Cannot find name 'ErrorState'; (56,10) 'DataTable'; (22,32) 'LeaveApplication'; (111,8) 'HistoryDrawer'.
+    -> import ErrorState and DataTable from "../../../ui/components/...", `import type { LeaveApplication } from "../api";`, and DELETE the HistoryDrawer element and any history state (ELM has no history drawer).
+  (57,32) Property 'results' does not exist on LeaveApplication[] -> the hook returns a plain array: rows={data ?? []}.
+  (59..73) Parameter 'r' implicitly has an 'any' type -> fixed once DataTable<LeaveApplication> is imported; type render params as (r: LeaveApplication).
+  useWithdraw().mutate and useCancelLeave().mutate take the numeric id: mutate(r.id, {...}).
+
+client/src/modules/elm/pages/ApplyLeavePage.tsx errors:
+  (3,3) 'ActionIcon', (3,40) 'Group', (6,1) 'FaCalendarAlt', (11,1) 'StatusBadge' are declared but never read -> remove those imports. Change nothing else.

@@ -1,0 +1,16 @@
+﻿=== client/src/modules/elm/pages/ApplyLeavePage.tsx
+wrote client/src/modules/elm/pages/ApplyLeavePage.tsx
+model=qwen2.5-coder:7b num_ctx=12288 prompt_tokens=2448 output_tokens=616 wall=287s files=1
+=== client/src/modules/elm/pages/LeaveApprovalsPage.tsx
+wrote client/src/modules/elm/pages/LeaveApprovalsPage.tsx
+model=qwen2.5-coder:7b num_ctx=12288 prompt_tokens=2531 output_tokens=657 wall=272s files=1
+=== client/src/modules/elm/pages/LeaveBalancePage.tsx
+wrote client/src/modules/elm/pages/LeaveBalancePage.tsx
+model=qwen2.5-coder:7b num_ctx=12288 prompt_tokens=2425 output_tokens=347 wall=153s files=1
+=== client/src/modules/elm/pages/LeaveTypesPage.tsx
+wrote client/src/modules/elm/pages/LeaveTypesPage.tsx
+model=qwen2.5-coder:7b num_ctx=12288 prompt_tokens=3132 output_tokens=995 wall=601s files=1
+=== client/src/modules/elm/pages/MyLeavePage.tsx
+=== client/src/modules/elm/pages/MyLeavePage.tsx (rerun)
+wrote client/src/modules/elm/pages/MyLeavePage.tsx
+model=qwen2.5-coder:7b num_ctx=12288 prompt_tokens=3060 output_tokens=887 wall=435s files=1

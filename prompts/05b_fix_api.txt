@@ -1,0 +1,17 @@
+Step 5b (fix bugs). Output both complete files.
+
+modules/elm/api/views.py has these bugs:
+1. NameError at import time: LeaveBalanceSerializer, timezone and BadRequestError are used but never imported. Add:
+   from django.utils import timezone
+   from core.api.exceptions import BadRequestError
+   and add LeaveBalanceSerializer to the import from modules.elm.api.serializers.
+2. MyBalanceView calls get_balance(request.user.user_id, None, year) which returns a single row and needs a leave type. Replace it with:
+   balances = LeaveBalance.objects.filter(employee_id=request.user.user_id, year=year).select_related("leave_type").order_by("leave_type__name")
+   (import LeaveBalance from modules.elm.models), and use timezone.localdate().year for the default year. Remove get_balance from the services import.
+3. MyApplicationsView POST must require leave_elm.application.apply, GET must require leave_elm.application.view. Remove its permission_classes line and add:
+       def get_permissions(self):
+           code = "leave_elm.application.apply" if self.request.method == "POST" else "leave_elm.application.view"
+           return [HasPermission(code)()]
+4. Remove IsAuthenticated everywhere (the import and from every permission_classes list); HasPermission already rejects anonymous requests.
+
+modules/elm/api/serializers.py: remove the unused line "from modules.elm.services.leave import get_balance". Change nothing else in that file.

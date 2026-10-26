@@ -1,0 +1,20 @@
+﻿Phase 2 frontend fix, round 3. `npx tsc --noEmit` reports these errors in client/src/modules/elm/pages/MyLeavePage.tsx :
+
+src/modules/elm/pages/MyLeavePage.tsx(3,35): error TS6133: 'Stack' is declared but its value is never read.
+src/modules/elm/pages/MyLeavePage.tsx(3,42): error TS6133: 'Text' is declared but its value is never read.
+src/modules/elm/pages/MyLeavePage.tsx(14,10): error TS1484: 'LeaveApplication' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/modules/elm/pages/MyLeavePage.tsx(17,40): error TS6133: 'typesPending' is declared but its value is never read.
+src/modules/elm/pages/MyLeavePage.tsx(21,10): error TS6133: 'historyFor' is declared but its value is never read.
+src/modules/elm/pages/MyLeavePage.tsx(27,7): error TS2345: Argument of type 'number' is not assignable to parameter of type '{ id: number; }'.
+src/modules/elm/pages/MyLeavePage.tsx(42,7): error TS2345: Argument of type 'number' is not assignable to parameter of type '{ id: number; }'.
+src/modules/elm/pages/MyLeavePage.tsx(78,20): error TS2304: Cannot find name 'ActionIcon'.
+src/modules/elm/pages/MyLeavePage.tsx(83,21): error TS2304: Cannot find name 'ActionIcon'.
+
+Fix every one of them and output the complete file client/src/modules/elm/pages/MyLeavePage.tsx .
+- Import every Mantine component you use from "@mantine/core" and React hooks (useState) from "react"; remove imports that are never used.
+- Types from ../api must use `import type { ... } from "../api";` (verbatimModuleSyntax).
+- The api module is "../api" (client/src/modules/elm/api.ts), never "../../../api".
+- Every DataTable needs rowKey={(r) => r.id} and typed render params.
+- Call mutations with exactly the variable type the hook in api.ts declares.
+- Remove leftover state or elements copied from the placement module (history drawer, ActionIcon history button).
+Keep the page's behaviour otherwise unchanged.

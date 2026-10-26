@@ -1,0 +1,11 @@
+Phase 2 frontend. Your previous LeaveBalancePage.tsx was a copy of the placement "My Applications" page (wrong imports, wrong component name). Write it from scratch using ONLY specs/fe_ui_notes.md and client/src/modules/elm/api.ts. Output the complete file client/src/modules/elm/pages/LeaveBalancePage.tsx.
+
+LeaveBalancePage (UC-012 View Leave Balances):
+- `export default function LeaveBalancePage()`.
+- `const { data, isPending, error } = useMyBalance();` and `const types = useLeaveTypes();`
+- If error: return <Container size="xl"><ErrorState error={error} /></Container>.
+- Container size="xl"; PageHeader title "Leave Balance" subtitle "Allotted, used and available days this year".
+- Card padding="lg" with DataTable<LeaveBalance>: rows data ?? [], loading isPending, rowKey r => r.id, columns:
+  Leave type (render: name of the type whose id === r.leave_type from types.data, else "#" + r.leave_type), Year (key "year"), Allotted ("allotted"), Used ("used"), Available ("available").
+- empty: { title: "No leave balance yet", description: "Your leave administrator has not allotted leave for this year." }
+Do not import anything that is not used.

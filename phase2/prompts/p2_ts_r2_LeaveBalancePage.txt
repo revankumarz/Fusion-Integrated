@@ -1,0 +1,20 @@
+﻿Phase 2 frontend fix, round 2. `npx tsc --noEmit` reports these errors in client/src/modules/elm/pages/LeaveBalancePage.tsx :
+
+src/modules/elm/pages/LeaveBalancePage.tsx(1,91): error TS2307: Cannot find module '../../../api' or its corresponding type declarations.
+src/modules/elm/pages/LeaveBalancePage.tsx(2,24): error TS6133: 'LeaveType' is declared but its value is never read.
+src/modules/elm/pages/LeaveBalancePage.tsx(2,41): error TS2307: Cannot find module '../../../api' or its corresponding type declarations.
+src/modules/elm/pages/LeaveBalancePage.tsx(3,1): error TS6133: 'notifications' is declared but its value is never read.
+src/modules/elm/pages/LeaveBalancePage.tsx(4,1): error TS6133: 'errorMessage' is declared but its value is never read.
+src/modules/elm/pages/LeaveBalancePage.tsx(15,94): error TS7006: Parameter 't' implicitly has an 'any' type.
+src/modules/elm/pages/LeaveBalancePage.tsx(25,8): error TS2304: Cannot find name 'Card'.
+src/modules/elm/pages/LeaveBalancePage.tsx(29,19): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/modules/elm/pages/LeaveBalancePage.tsx(33,9): error TS2304: Cannot find name 'Card'.
+
+Fix every one of them and output the complete file client/src/modules/elm/pages/LeaveBalancePage.tsx .
+- Import every Mantine component you use from "@mantine/core" and React hooks (useState) from "react"; remove imports that are never used.
+- Types from ../api must use `import type { ... } from "../api";` (verbatimModuleSyntax).
+- The api module is "../api" (client/src/modules/elm/api.ts), never "../../../api".
+- Every DataTable needs rowKey={(r) => r.id} and typed render params.
+- Call mutations with exactly the variable type the hook in api.ts declares.
+- Remove leftover state or elements copied from the placement module (history drawer, ActionIcon history button).
+Keep the page's behaviour otherwise unchanged.

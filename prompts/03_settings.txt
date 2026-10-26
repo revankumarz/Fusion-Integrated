@@ -1,0 +1,3 @@
+Step 3 (register the module). Update config/settings/base.py.
+
+Keep EVERY existing line of the file exactly as given, character for character, in the same order. Do not shorten, summarise or omit anything. The only change: in the DOMAIN_MODULES list, add "modules.elm", on a new line after "modules.placement",. Output the complete file.
