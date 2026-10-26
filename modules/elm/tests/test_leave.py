@@ -214,3 +214,15 @@ def test_admin_creates_leave_type_and_employee_cannot(stub_iam, balance):
         "is_active": True
     }, format="json")
     assert response.status_code == 403
+
+def test_allotment_above_leave_type_max_is_rejected(stub_iam, balance):
+    c = _client(stub_iam, 4004, "leave_elm.policy.manage")
+    response = c.post("/api/v1/elm/admin/balances", {
+        "employee_id": 1001,
+        "leave_type_id": balance.leave_type.id,
+        "year": balance.year,
+        "allotted": balance.leave_type.max_days_per_year + 1,
+    }, format="json")
+    assert response.status_code == 400
+    balance.refresh_from_db()
+    assert balance.allotted == 8

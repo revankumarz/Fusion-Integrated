@@ -2,7 +2,7 @@
 
 from django.db import transaction
 
-from core.api.exceptions import ConflictError, NotFoundError
+from core.api.exceptions import BadRequestError, ConflictError, NotFoundError
 from modules.elm.models import LeaveBalance, LeaveType
 from modules.elm.services.leave import require
 
@@ -26,6 +26,10 @@ def allot_balance(actor, employee_id, leave_type_id, year, allotted):
             leave_type = LeaveType.objects.select_for_update().get(id=leave_type_id)
         except LeaveType.DoesNotExist:
             raise NotFoundError("Leave type not found.", code="not_found") from None
+        if allotted > leave_type.max_days_per_year:
+            raise BadRequestError(
+                "Allotment exceeds the leave type's maximum days per year.", code="above_max"
+            )
         balance, _ = LeaveBalance.objects.select_for_update().get_or_create(
             employee_id=employee_id,
             leave_type=leave_type,

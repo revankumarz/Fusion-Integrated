@@ -1996,9 +1996,11 @@ components:
           type: integer
         year:
           type: integer
+          maximum: 2100
           minimum: 2000
         allotted:
           type: integer
+          maximum: 366
           minimum: 0
       required:
       - allotted
@@ -3036,6 +3038,7 @@ components:
           maxLength: 128
         max_days_per_year:
           type: integer
+          maximum: 366
           minimum: 0
         requires_document:
           type: boolean

@@ -46,12 +46,12 @@ class DecisionInputSerializer(serializers.Serializer):
 class LeaveTypeCreateInputSerializer(serializers.Serializer):
     code = serializers.CharField(max_length=16)
     name = serializers.CharField(max_length=128)
-    max_days_per_year = serializers.IntegerField(min_value=0)
+    max_days_per_year = serializers.IntegerField(min_value=0, max_value=366)
     requires_document = serializers.BooleanField(required=False, default=False)
 
 
 class AllotInputSerializer(serializers.Serializer):
     employee_id = serializers.IntegerField()
     leave_type_id = serializers.IntegerField()
-    year = serializers.IntegerField(min_value=2000)
-    allotted = serializers.IntegerField(min_value=0)
+    year = serializers.IntegerField(min_value=2000, max_value=2100)
+    allotted = serializers.IntegerField(min_value=0, max_value=366)
